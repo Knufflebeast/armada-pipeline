@@ -1,0 +1,320 @@
+{
+	"$id": "gaming_short_structure",
+	"icon": "folder_game",
+	"hierarchy": {
+		"pipeline_root": {
+			"template_id": "pipeline_root",
+			"category": "folder",
+			"template": "root",
+			"icon": "folder_pipeline_root",
+			"data": {
+				"meta_data": {"$ref": ["definitions", "meta_data"]},
+				"ext_data": {"$ref": ["definitions", "ext_data"]
+				}
+			},
+			"children": {
+				"client": {
+					"template_id": "client",
+					"category": "folder",
+					"template": "root",
+					"icon": "folder_client",
+					"data": {
+						"meta_data": {"$ref": ["definitions", "meta_data"]},
+						"ext_data": {"$ref": ["definitions", "ext_data"]
+						}
+					},
+					"children": {
+						"project": {
+							"template_id": "project",
+							"category": "folder",
+							"template": "root",
+							"icon": "folder_project",
+							"data": {
+								"meta_data": {"$ref": ["definitions", "meta_data"]},
+								"ext_data": {"$ref": ["definitions","ext_data"]}
+							},
+							"children": {
+								"asset_library": {
+									"template_id": "asset_library",
+									"category": "sub_folder",
+									"template": "asset",
+									"icon": "folder_folder",
+									"data": {
+										"meta_data": {"$ref": ["definitions", "meta_data"]},
+										"ext_data": {"$ref": ["definitions","ext_data"]}
+									},
+									"children": {
+										"asset_type": {
+											"template_id": "asset_type",
+											"category": "folder",
+											"template": "asset",
+											"icon": "folder_asset_type",
+											"data": {
+												"meta_data": {"$ref": ["definitions", "meta_data"]},
+												"ext_data": {"$ref": ["definitions","ext_data"]}
+											},
+											"children": {
+												"asset": {
+													"template_id": "asset",
+													"category": "folder",
+													"template": "asset",
+													"icon": "folder_asset",
+													"data": {
+														"meta_data": {"$ref": ["definitions","meta_data"]},
+														"ext_data": {"$ref": ["definitions","ext_data"]}
+													},
+													"children": {
+														"asset_task": {
+															"template_id": "task",
+															"category": "folder",
+															"template": "asset",
+															"icon": "folder_task",
+															"data": {
+																"meta_data": {"$ref": ["definitions","meta_data"]},
+																"ext_data": {"$ref": ["definitions","ext_data"]}
+															},
+															"children": {
+																"asset_major_component": {
+																	"template_id": "major_component",
+																	"category": "file",
+																	"template": "asset",
+																	"icon": "folder_major_component",
+																	"data": {
+																		"meta_data": {"$ref": ["definitions","meta_data"]},
+																		"ext_data": {"$ref": ["definitions","ext_data"]},
+																		"type_data": {"$ref": ["definitions","type_data_major"]}
+																	},
+																	"children": {
+																		"asset_minor_component": {
+																			"template_id": "minor_component",
+																			"category": "version",
+																			"template": "asset",
+																			"icon": "software",
+																			"data": {
+																				"meta_data": {"$ref": ["definitions","meta_data"]},
+																				"type_data": {"$ref": ["definitions","type_data_minor"]}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"levels": {
+									"template_id": "levels",
+									"category": "sub_folder",
+									"template" : "shot",
+									"icon": "folder_folder",
+									"data": {
+										"meta_data": {"$ref": ["definitions", "meta_data"]},
+										"ext_data": {"$ref": ["definitions","ext_data"]}
+									},
+									"children": {
+										"level": {
+											"template_id": "level",
+											"category": "folder",
+											"template" : "level",
+											"icon": "folder_level",
+											"data": {
+												"meta_data": {"$ref": ["definitions", "meta_data"]},
+												"ext_data": {"$ref": ["definitions","ext_data"]}
+											},
+											"children": {
+												"level_task": {
+													"template_id": "task",
+													"category": "folder",
+													"template" : "level",
+													"icon": "folder_task",
+													"data": {
+														"meta_data": {"$ref": ["definitions","meta_data"]},
+														"ext_data": {"$ref": ["definitions","ext_data"]}
+													},
+													"children": {
+														"level_major_component": {
+															"template_id": "major_component",
+															"category": "file",
+															"template" : "level",
+															"icon": "folder_major_component",
+															"data": {
+																"meta_data": {"$ref": ["definitions","meta_data"]},
+																"ext_data": {"$ref": ["definitions","ext_data"]},
+																"type_data": {"$ref": ["definitions","type_data_major"]}
+															},
+															"children": {
+																"level_minor_component": {
+																	"template_id": "minor_component",
+																	"category": "version",
+																	"template" : "level",
+																	"icon": "software",
+																	"data": {
+																		"meta_data": {"$ref": ["definitions","meta_data"]},
+																		"type_data": {"$ref": ["definitions","type_data_minor"]}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"templates": {
+		"asset": {
+			"user_file": "{major_component}-{major_ver}.{minor_ver}.{extension}",
+			"publish_file": "{major_component}_{object}_{version}.{extension}",
+			"path": {
+				"data": "{client}/{project}/{asset_library}/{asset_type}/{asset}/{task}/{major_component}/{minor_component}",
+				"user": "{client}/{project}/{asset_library}/{asset_type}/{asset}/Production/{task}/{software}/{working_dir}"
+			},
+			"publish_path": {
+				"data": "{client}/{project}/{asset_library}/{asset_type}/{asset}/{task}/{major_component}/{minor_component}",
+				"user": "{client}/{project}/{asset_library}/{asset_type}/{asset}/Publish/{object_type}/v{version}"
+			}
+		},
+		"shot": {
+			"user_file": "{major_component}-{major_ver}.{minor_ver}.{extension}",
+			"publish_file": "{major_component}_{object}.{extension}",
+			"path": {
+				"data": "{client}/{project}/{sequences}/{sequence}/{shot}/{task}/{major_component}/{minor_component}",
+				"user": "{client}/{project}/{sequences}/{sequence}/{shot}/Production/{task}/{software}/{working_dir}"
+			},
+			"publish_path": {
+				"data": "{client}/{project}/{sequences}/{sequence}/{shot}/{task}/{asset_component}/{major_component}/{minor_component}",
+				"user": "{client}/{project}/{sequences}/{sequence}/{shot}/Publish/{object_type}/v{version}"
+			}
+		}
+	},
+	"definitions": {
+		"description": "Data definitions",
+		"meta_data": {
+			"type": "data",
+			"description": "Data that describes the object's context and properties",
+			"required": [
+				"item_name",
+				"item_type",
+				"uuid",
+				"locked",
+				"hidden"
+			],
+			"properties": {
+				"item_name": {
+					"type": "string",
+					"description": "Item's name",
+					"examples": [
+						"File_Name"
+					]
+				},
+				"item_type": {
+					"type": "string",
+					"description": "Item's type",
+					"examples": [
+						"client",
+						"project",
+						"folder",
+						"asset"
+					]
+				},
+				"uuid": {
+					"type": "string",
+					"description": "Item's unique id",
+					"examples": [
+						"00f24c82-841b-4728-3h6s-4b198cf24ee0"
+					]
+				},
+				"locked": {
+					"type": "string",
+					"description": "Item's lock state"
+				},
+				"hidden": {
+					"type": "string",
+					"description": "Item's visibility state"
+				},
+				"structure_id": {
+					"type": "string",
+					"description": "id of the template"
+				}
+			}
+		},
+		"ext_data": {
+			"type": "data",
+			"description": "Data from project management software",
+			"properties": {
+				"assignee": {
+					"type": "string",
+					"description": "User assigned to item"
+				},
+				"due_date": {
+					"type": "string",
+					"description": "When is the item due?"
+				},
+				"priority": {
+					"type": "string",
+					"description": "Item priority"
+				},
+				"tags": {
+					"type": "array",
+					"description": "Descriptive tags"
+				},
+				"progress": {
+					"type": "string",
+					"description": "Progress state"
+				}
+			}
+		},
+		"type_data_major": {
+			"type": "data",
+			"description": "Type data for a major component",
+			"required": ["software"],
+			"properties": {
+				"software": {
+					"type": "string",
+					"description": "Software this item is related to"
+				},
+				"major_ver": {
+					"type": "string",
+					"description": "Minor version for item"
+				}
+			}
+		},
+		"type_data_minor": {
+			"type": "data",
+			"description": "Type data for a minor component",
+			"required": ["software"],
+			"properties": {
+				"software": {
+					"type": "string",
+					"description": "Software this item is related to"
+				},
+				"minor_ver": {
+					"type": "string",
+					"description": "Minor version for item"
+				},
+				"comment": {
+					"type": "string",
+					"description": "User comments for item"
+				},
+				"user": {
+					"type": "string",
+					"description": "User who created item"
+				},
+				"time": {
+					"type": "string",
+					"description": "Date and time of item creation"
+				}
+			}
+		}
+	}
+}

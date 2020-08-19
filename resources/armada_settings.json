@@ -1,0 +1,6 @@
+{
+	"schemas" : {
+		"data" : "data_schema_v01",
+		"user_config" : "user_config_schema_v01"
+	}
+}

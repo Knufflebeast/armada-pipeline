@@ -1,0 +1,152 @@
+
+/*QWidget{*/
+/*    background: #262626;*/
+/*    color:rgb(232,232,232) ;*/
+/*    font-size: 12px ;*/
+/*    font-weight:bold;*/
+/*    border: 0px;*/
+/*    padding: 0px;*/
+/*}*/
+
+/*!*QWidget#LineB{*!*/
+/*!*    background-color: #c0c0c0;*!*/
+/*!*}*!*/
+/*QSvg {*/
+/*  fill: #ff0000;*/
+/*}*/
+
+/*QLineEdit{*/
+/*    background: #424242;*/
+/*    color: #DADADA ;*/
+/*    font: 12px "Roboto Thin";*/
+/*    border: none;*/
+/*    height: 30px;*/
+/*    border-radius: 15px;*/
+/*}*/
+
+/*QSplitter::handle:horizontal {*/
+/*background-color: #5a5a5a;*/
+/*}*/
+
+/*QToolTip{*/
+/*    color: rgb(200,200,200);*/
+/*    background-color: rgb(20,20,20);*/
+/*    border: 0px rgb(170,170,170);*/
+/*    font: 12px "Roboto Thin"*/
+/*}*/
+
+
+
+/*QTreeView{*/
+/*    show-decoration-selected: 1;*/
+/*    background: #262626;*/
+/*    color:rgb(218,218,218) ;*/
+/*    font:12px "Segoe UI Semibold";*/
+/*    border: none;*/
+/*    height: 200px;*/
+/*    outline: 0;*/
+
+/*}*/
+/*QTreeView::branch{*/
+/*    height: 20px;*/
+
+/*}*/
+/*QTreeView::indicator:unchecked{*/
+/*    image: url("resources/icon/branch_closed_white.png");*/
+/*}*/
+/*QTreeView::indicator:checked{*/
+/*    image: url("resources/icon/branch_open_white.png");*/
+/*}*/
+/*QTreeView::item:hover, QTreeView::branch:hover{*/
+/*    background-color: #2c998e;*/
+/*    color: #EDEDED;*/
+/*    font-weight:bold;*/
+/*}*/
+/*QTreeView::item:selected, QTreeView::item:selected:active, QTreeView::branch:selected{*/
+/*    background-color: #2c998e;*/
+/*    color:rgb(232,232,232)*/
+/*}*/
+
+/*QTreeView::QHeaderView:section{*/
+/*    background: #636363;*/
+/*    font-weight:bold;*/
+/*    height: 20px;*/
+/*}*/
+/*QTreeView::branch:has-children:!has-siblings:closed,*/
+/*QTreeView::branch:closed:has-children:has-siblings {*/
+/*    image: url(resources/icon/branch_closed_white.png);*/
+/*}*/
+/*QTreeView::branch:open:has-children:!has-siblings,*/
+/*QTreeView::branch:open:has-children:has-siblings  {*/
+/*    image: url(resources/icon/branch_open_white.png);*/
+/*}*/
+
+/*QTreeView::branch:open:has-children:!has-siblings,*/
+/*QTreeView::branch:open:has-children:has-siblings  {*/
+/*    image: url(resources/icon/branch_open_white.png);*/
+/*}*/
+
+
+/*QListView{*/
+/*    show-decoration-selected: 1;*/
+/*    background: #262626;*/
+/*    color:rgb(218,218,218) ;*/
+/*    font:12px "Roboto Thin";*/
+/*    border: none;*/
+/*    height: 200px;*/
+/*    outline: 0;*/
+/*}*/
+/*QListView::item:hover, QTreeView::branch:hover{*/
+/*    background-color: #2a615f;*/
+/*    color: #EDEDED;*/
+/*    font-weight:bold;*/
+/*}*/
+/*QListView::item:selected, QTreeView::item:selected:active, QTreeView::branch:selected{*/
+/*    background-color: #2c998e;*/
+/*    color:rgb(232,232,232)*/
+/*}*/
+
+/*QScrollBar::handle{*/
+/*    background-color: rgb(156, 156, 156);*/
+/*}*/
+/*QScrollBar::sub-page {*/
+/*    background: rgb(94, 94, 94);*/
+/*}*/
+/*QScrollBar::add-page {*/
+/*    background: rgb(94, 94, 94);*/
+/*}*/
+
+/*QPushButton{*/
+/*    Background:#636363;*/
+/*    height: 30px;*/
+/*    font: 12px "Roboto Thin"*/
+/*}*/
+/*QPushButton:hover{*/
+/*    Background: #369593;*/
+/*}*/
+/*QPushButton:hover:pressed{*/
+/*    Background: #2e7a78;*/
+/*}*/
+/*QPushButton:pressed{*/
+/*    Background:  #2a615f;*/
+/*}*/
+
+/*QComboBox {*/
+/*    background: #262626;*/
+/*    font: 12px "Roboto Thin";*/
+/*    padding: 1px 18px 1px 20px;*/
+/*    height: 30px;*/
+/*    border: none;*/
+/*}*/
+/*QComboBox:hover{*/
+/*    background: #454545;*/
+/*    font: 12px "Roboto Thin";*/
+/*    height: 30px;*/
+/*    border: none;*/
+/*    border-radius: 6px;*/
+/*}*/
+/*QComboBox::drop-down{*/
+/*    border: 0px;*/
+/*}*/
+
+
