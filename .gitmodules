@@ -1,0 +1,9 @@
+[submodule "core"]
+	path = core
+	url = git@github.com:Armada-Pipeline/core.git
+[submodule "launcher"]
+	path = launcher
+	url = git@github.com:Armada-Pipeline/launcher.git
+[submodule "marina"]
+	path = marina
+	url = git@github.com:Armada-Pipeline/marina.git
