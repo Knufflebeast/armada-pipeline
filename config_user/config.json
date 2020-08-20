@@ -1,0 +1,10 @@
+{
+    "env_vars": {
+        "ARMADA_BLENDER_LOCATION": "",
+        "ARMADA_DEBUG": "1",
+        "ARMADA_MAYA_LOCATION": "",
+        "ARMADA_MOUNT_PREFIX": "",
+        "ARMADA_SITE": "nyc-harlem",
+        "ARMADA_STUDIO": "knufflebeast"
+    }
+}

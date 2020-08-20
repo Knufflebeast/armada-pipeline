@@ -1,0 +1,10 @@
+{
+    "env_vars": {
+        "ARMADA_BLENDER_LOCATION": "C:/Program Files",
+        "ARMADA_DEBUG": "1",
+        "ARMADA_MAYA_LOCATION": "C:/Program Files/Autodesk",
+        "ARMADA_MOUNT_PREFIX": "D:/OneDrive/Desktop/test",
+        "ARMADA_SITE": "home-harlem",
+        "ARMADA_STUDIO": "ustwo"
+    }
+}
