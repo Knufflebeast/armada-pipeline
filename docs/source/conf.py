@@ -14,13 +14,14 @@ import os
 import sys
 import mock
 
-print('doc path = {0}'.format(os.path.abspath('../../')))
+print('doc path = {0}'.format(os.path.abspath('../../armada')))
 
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('../../armada'))
+
 
 for module in [
 	"maya", "maya.mel", "maya.cmds", "maya.OpenMaya", "maya.OpenMayaUI" "wrapInstance", "shiboken",
-	"hou", "hdefereval", "bpy"
+	"hou", "hdefereval"
 ]:
 	sys.modules[module] = mock.MagicMock()
 
@@ -31,7 +32,7 @@ copyright = '2020, Mike Bourbeau'
 author = 'Mike Bourbeau'
 
 # The full version, including alpha/beta/rc tags
-release = '2020.8.12b'
+release = '0.0.1'
 
 
 # -- General configuration ---------------------------------------------------

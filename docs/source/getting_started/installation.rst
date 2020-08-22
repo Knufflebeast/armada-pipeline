@@ -8,7 +8,7 @@ Installation
 3. Run armada_pipeline.exe (.dmg on MacOS)
 
 Setup
------
+*****
 
 1. Read and accept the Beta Guidelines
 2. Setup the mount point

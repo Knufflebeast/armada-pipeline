@@ -7,3 +7,6 @@
 [submodule "packages/marina"]
 	path = packages/marina
 	url = git@github.com:Armada-Pipeline/marina.git
+[submodule "packages/atlantis"]
+	path = packages/atlantis
+	url = git@github.com:Armada-Pipeline/atlantis.git

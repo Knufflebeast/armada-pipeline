@@ -1,6 +1,6 @@
 .. _maya_app:
 
-.. automodule:: armada.app.maya.scripts.userSetup
+.. automodule:: armada.hooks.app.maya.scripts.userSetup
    :members:
    :undoc-members:
    :show-inheritance:

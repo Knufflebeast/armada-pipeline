@@ -8,7 +8,7 @@ Documentation will live on readthedocs.org. It won't be set up for source releas
 
 Download the beta now! https://gum.co/YwBqX
 
-Future website: https://www.armadapipeline.org
+Future website: https://www.armadapipeline.com
 
 Discord: https://discord.gg/5jXdtau
 
