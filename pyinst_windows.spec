@@ -3,13 +3,13 @@
 block_cipher = None
 
 added_files = [
-    ('./armada', 'armada'),
+    ('./core', 'core'),
     ('./resources', 'resources'),
     ('./config_user/config.json', 'config_user'),
     ('./packages/marina', 'packages/marina'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),
-    ('./packages/mb_tools', 'packages/mb_tools'),
+#    ('./packages/mb_tools', 'packages/mb_tools'),
     ('./utilsa', 'utilsa'),
     ('./vendor', 'vendor'),
 #    ('c:/hostedtoolcache/windows/python/3.7.7/x64/lib/site-packages/PySide2', 'PySide2'),
