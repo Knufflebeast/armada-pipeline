@@ -20,7 +20,7 @@ added_files = [
 a = Analysis(['./packages/launcher/main.py'],
     pathex=[
     './',
-    './armada',
+    './core',
     './packages',
     './vendor/Qt.py',
     './vendor/lucidity/source',
