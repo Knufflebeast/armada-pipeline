@@ -1,6 +1,6 @@
 ![Release](https://github.com/mikebourbeauart/mb-armada/workflows/Release/badge.svg)
 ![Documentation Status](https://readthedocs.org/projects/armada-pipeline/badge/?version=latest)
-![alt text](https://github.com/mikebourbeauart/mb-armada/blob/feature/docs/cover_full_github.png?raw=true)
+![alt text](https://github.com/Armada-Pipeline/armada-pipeline/blob/master/cover_full_github.png?raw=true)
 
 An art asset pipeline for artists
 
