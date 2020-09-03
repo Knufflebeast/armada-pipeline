@@ -4,9 +4,10 @@ Module for prep asset popup.
 import os
 import sys
 import platform
-from distutils.dir_util import copy_tree
 
-from Qt import QtCore, QtWidgets, QtGui
+from Qt import QtCore
+from Qt import QtWidgets
+from Qt import QtGui
 
 from core import definitions
 from core import resource
@@ -44,11 +45,13 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.setObjectName('armada_Installer')
 		self.armada_root_path = definitions.ROOT_PATH
 
-		self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+		# self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+		self.setWindowTitle('Armada Pipeline Installer')
+		self.setWindowIcon(resource.icon('armada_logo', 'png'))
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.installEventFilter(self)
 		self.setStyleSheet(resource.style_sheet('setup'))
-		self.setFixedSize(900, 600)
+		self.setFixedSize(1000, 500)
 		self.sizeHint()
 
 		# GUI ------------------------------
@@ -91,7 +94,10 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		self.le_install_dir = QtWidgets.QLineEdit()
 		# Path defaults
+
 		if platform.system().lower() in ['windows']:
+			# install_dir = os.getenv('programdata').replace('\\', '/')
+			# install_dir = str(Path.home()).replace('\\', '/')
 			install_dir = "C:/Program Files"
 		elif platform.system().lower() in ['darwin']:
 			install_dir = "/Applications"
@@ -100,17 +106,27 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.le_install_dir.setText(install_dir)
 		self.le_install_dir.setTextMargins(10, 5, 10, 5)
 
+		self.lbl_armada_ver = QtWidgets.QLabel()
+		self.lbl_armada_ver.setText("Armada Pipeline version:")
+		self.lbl_armada_ver.setStyleSheet(resource.style_sheet('setup'))
+
+		self.armada_versions = ['2020.09.02-beta']
+		self.cb_version_numbers = QtWidgets.QComboBox()
+		self.cb_version_numbers.addItems(self.armada_versions)
+
+
 		self.lbl_full_path = QtWidgets.QLabel()
 		self.lbl_full_path.setText("Full path:")
 		self.lbl_full_path.setStyleSheet(resource.style_sheet('setup'))
 		self.le_full_path = QtWidgets.QLabel()
 		serifFont = QtGui.QFont("Roboto", 10, QtGui.QFont.StyleItalic)
 		self.le_full_path.setFont(serifFont)
-		self.le_full_path.setText('{0}/Armada Pipeline'.format(self.le_install_dir.text()))
+		# self.le_full_path.setText('{0}/Armada Pipeline/armada_pipeline_{1}_win10'.format(self.le_install_dir.text(), self.armada_version))
+		self.le_full_path.setText('{0}/Armada Pipeline/'.format(self.le_install_dir.text()))
 		self.le_full_path.setWordWrap(True)
 
-		self.btn_mount_browse = QtWidgets.QPushButton("Browse")
-		self.btn_mount_browse.setMinimumWidth(100)
+		self.btn_install_browse = QtWidgets.QPushButton("Browse")
+		self.btn_install_browse.setMinimumWidth(100)
 
 		self.btn_left = QtWidgets.QPushButton("Cancel")
 		self.btn_left.setStyleSheet("""
@@ -172,6 +188,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			color: #FFFFFF;
 			font: 14px "Roboto-thin";
 			border: 0px;
+			
 		}""")
 
 		# State machine ------------------
@@ -215,20 +232,27 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.title_layout.setAlignment(QtCore.Qt.AlignCenter)
 		self.title_layout.setContentsMargins(20, 20, 20, 20)
 
+		self.armada_version_layout = QtWidgets.QHBoxLayout()
+		self.armada_version_layout.addWidget(self.lbl_armada_ver, 0, QtCore.Qt.AlignLeft)
+		self.armada_version_layout.addWidget(self.cb_version_numbers, 1, QtCore.Qt.AlignLeft)
+		self.armada_version_layout.setContentsMargins(0, 0, 0, 20)
+
 		# Mount point layout
 		self.install_dir_layout = QtWidgets.QHBoxLayout()
 		self.install_dir_layout.addWidget(self.lbl_install_dir, 0, QtCore.Qt.AlignLeft)
 		self.install_dir_layout.addWidget(self.le_install_dir, 1)
-		self.install_dir_layout.addWidget(self.btn_mount_browse, 0, QtCore.Qt.AlignRight)
+		self.install_dir_layout.addWidget(self.btn_install_browse, 0, QtCore.Qt.AlignRight)
 		self.install_dir_layout.setAlignment(QtCore.Qt.AlignLeft)
 
 		self.full_path_layout = QtWidgets.QHBoxLayout()
 		self.full_path_layout.addWidget(self.lbl_full_path, 0, QtCore.Qt.AlignLeft)
 		self.full_path_layout.addWidget(self.le_full_path, 1)
+		self.full_path_layout.setContentsMargins(0, 20, 0, 20)
 
 		# Structure layout
 		self.description_layout = QtWidgets.QHBoxLayout()
 		self.description_layout.addWidget(self.lbl_description, 1, QtCore.Qt.AlignTop)
+		self.description_layout.setContentsMargins(0, 0, 0, 0)
 
 		self.button_layout = QtWidgets.QHBoxLayout()
 		self.button_layout.addWidget(self.btn_left)
@@ -237,6 +261,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.button_layout.setContentsMargins(20, 20, 20, 20)
 
 		self.info_layout = QtWidgets.QVBoxLayout()
+		self.info_layout.addLayout(self.armada_version_layout)
 		self.info_layout.addLayout(self.description_layout)
 		self.info_layout.addLayout(self.install_dir_layout)
 		self.info_layout.addLayout(self.full_path_layout)
@@ -254,7 +279,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.setLayout(self.main_layout)
 
 		# Connections
-		self.btn_mount_browse.clicked.connect(self.on_browse_pressed)
+		self.btn_install_browse.clicked.connect(self.on_browse_pressed)
 		self.le_install_dir.textChanged.connect(self.on_le_mount_text_changed)
 
 		self.esc_pressed.connect(self.on_cancel_pressed)
@@ -276,10 +301,13 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			self.btn_right.setEnabled(False)
 
 	def on_browse_pressed(self):
-		self.file_dialog = QtWidgets.QFileDialog()
+		self.file_dialog = QtWidgets.QFileDialog(self, directory=self.le_install_dir.text())
 		self.file_dialog.setFileMode(self.file_dialog.Directory)
 		path = self.file_dialog.getExistingDirectory(self, "Choose install directory")
-		self.le_install_dir.setText(path)
+		if path == "":
+			pass
+		else:
+			self.le_install_dir.setText(path)
 
 	def on_s0_install_entered(self):
 		# Steps
@@ -298,20 +326,11 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.cb_s1_complete.setStyleSheet(self.cb_s0_style)
 
 		self.lbl_description.clear()
-		self.lbl_description.setHtml("""<p>Choose an installation directory.</p>
-		""")
+		self.lbl_description.setHtml("""<p>Choose an installation directory:</p>""")
 
 		self.lbl_description.setFixedHeight(int(self.lbl_description.document().size().height()))
 
 		self.lbl_title.setText('Install Armada Pipeline')
-		self.install_dir_layout.setContentsMargins(0, 0, 0, 0)
-
-		# Show mount gui
-		self.lbl_install_dir.show()
-		self.le_install_dir.show()
-		self.btn_mount_browse.show()
-		self.lbl_full_path.show()
-		self.le_full_path.show()
 
 		try:
 			self.btn_right.clicked.disconnect(self.on_accept_pressed)
@@ -352,9 +371,13 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		# Show mount gui
 		self.lbl_install_dir.hide()
 		self.le_install_dir.hide()
-		self.btn_mount_browse.hide()
+		self.btn_install_browse.hide()
 		self.lbl_full_path.hide()
 		self.le_full_path.hide()
+		self.install_dir_layout.setContentsMargins(0, 0, 0, 0)
+		self.lbl_armada_ver.hide()
+		self.cb_version_numbers.hide()
+		self.armada_version_layout.setContentsMargins(0, 0, 0, 0)
 
 		self.lbl_description.clear()
 		self.lbl_description.setFixedHeight(int(self.lbl_description.document().size().toSize().width()))
@@ -364,8 +387,8 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		</br>
 		<br></br>
 		<br></br>
-		Armada Pipeline was successfully installed in:</p>
-		<blockquote><i>{0}</i></blockquote>""".format(self.le_full_path.text()))
+		Armada Pipeline v{0} was successfully installed in:</p>
+		<blockquote><i>{1}</i></blockquote>""".format(self.cb_version_numbers.currentText(), self.le_full_path.text()))
 
 		self.install_dir_layout.setContentsMargins(0, 0, 0, 0)
 		self.lbl_title.setText('Bon Voyage!')
@@ -387,34 +410,49 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 	def on_install_pressed(self):
 		print('installing')
+		print(self.le_full_path.text())
+
 		# Make path
 		path_maker.make_dirs(self.le_full_path.text())
+		# Path defaults
+		if platform.system().lower() in ['windows']:
+			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_win10.zip'.format(self.cb_version_numbers.currentText())
+		elif platform.system().lower() in ['darwin']:
+			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_macos.zip'.format(self.cb_version_numbers.currentText())
+		else:
+			raise
 
-		release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v2020.08.30b/armada_pipeline_2020.8.28b_macos.zip'
 		save_path = '{0}/armada_pipeline.zip'.format(self.le_full_path.text())
 
 		##Python 3
 		import urllib.request
-		print("download start!")
+		print("download started!")
 		filename, headers = urllib.request.urlretrieve(release_url, filename=save_path)
 		print("download complete!")
 		print("download file location: ", filename)
 		print("download headers: ", headers)
 
-		import zipfile, urllib.request, shutil
-		#
-		# with urllib.request.urlopen(release_url) as response, open(save_path, 'wb') as out_file:
-		# 	shutil.copyfileobj(response, out_file)
-		# 	# with zipfile.ZipFile(save_path) as zf:
-		# 	# 	zf.extractall()
-		#
-		params = headers.get('Content-Disposition', '')
-		print(params)
-		filename = params.split(';')[1]
-		print(filename)
-		with zipfile.ZipFile(save_path, 'r') as zip_ref:
-			zip_ref.extractall('{0}/{1}'.format(self.le_full_path.text(), filename))
+		import zipfile
 
+		params = headers.get('Content-Disposition', '')
+		filename = params.split('; filename=')[1]
+
+		with zipfile.ZipFile(save_path, 'r') as zip_ref:
+			zip_ref.extractall(os.path.join(self.le_full_path.text()))
+
+		# Rename unzipped folder
+		try:
+			os.rename(save_path.rpartition('.zip')[0], os.path.join(self.le_full_path.text(), filename.rpartition('.zip')[0]))
+			self.extracted_directory = os.path.join(self.le_full_path.text(), filename.rpartition('.zip')[0]).replace('\\', '/')
+
+			# Delete zip file
+			os.remove(save_path)
+
+
+		except FileExistsError as e:
+			os.remove(save_path)
+			os.remove(save_path.rpartition('.zip')[0])
+			raise FileExistsError('')
 
 		# import requests
 		# import zipfile
@@ -426,12 +464,14 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 
 	def on_accept_pressed(self):
-		"""
-
+		"""Run Armada after installation
 		"""
 
 		install_dir = self.le_install_dir.text()
 		print(install_dir)
+		print(self.extracted_directory)
+		import subprocess
+		subprocess.Popen(os.path.join(self.extracted_directory, 'armada_pipeline.exe'))
 		self.close()
 
 	def keyPressEvent(self, event):
@@ -452,4 +492,4 @@ if __name__ == "__main__":
 
 	ArmadaInstaller()
 
-	# sys.exit(app.exec_())
+	sys.exit(app.exec_())

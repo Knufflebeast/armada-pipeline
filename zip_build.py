@@ -1,4 +1,5 @@
 # pyinstaller --noconfirm pyinst_windows.spec
+# pyinstaller --noconfirm pyinst_windows_installer.spec
 # pyinstaller --noconfirm pyinst_macos.spec
 
 import os
