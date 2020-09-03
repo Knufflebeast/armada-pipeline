@@ -21,7 +21,7 @@ added_files = [
 a = Analysis(['packages/launcher/main.py'],
              pathex=[
              './',
-    		 './armada'
+    		 './core'
     		 ],
              binaries=[],
              datas=added_files,

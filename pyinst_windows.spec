@@ -5,7 +5,8 @@ block_cipher = None
 added_files = [
     ('./core', 'core'),
     ('./resources', 'resources'),
-    ('./config_user/config.json', 'config_user'),
+#    ('./config_user/config.json', 'config_user'),
+#    ('./logs', 'logs' ),
     ('./packages/marina', 'packages/marina'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),
@@ -20,7 +21,7 @@ added_files = [
 a = Analysis(['./packages/launcher/main.py'],
     pathex=[
     './',
-    './armada',
+    './core',
     './packages',
     './vendor/Qt.py',
     './vendor/lucidity/source',
@@ -80,6 +81,8 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=True,
+          manifest=None,
+#          uac_admin=True,
           icon='armada_logo.ico')
 #          # For --onefile bundle
 #          a.scripts,
