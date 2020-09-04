@@ -29,7 +29,8 @@ class ArmadaInstaller(QtWidgets.QDialog):
 	enter_signal_str = "returnPressed"
 	esc_pressed = QtCore.Signal(str)
 	esc_signal_str = "escPressed"
-	newCreated = QtCore.Signal()
+	download_complete = QtCore.Signal()
+
 
 	def __init__(self, setup=FULL):
 		"""
@@ -73,9 +74,13 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.cb_s0_install.setStyleSheet(self.cb_style_sheet)
 		self.cb_s0_install.setEnabled(False)
 
-		self.cb_s1_complete = QtWidgets.QCheckBox('Complete installation')
-		self.cb_s1_complete.setStyleSheet(self.cb_style_sheet)
-		self.cb_s1_complete.setEnabled(False)
+		self.cb_s1_download = QtWidgets.QCheckBox('Installing')
+		self.cb_s1_download.setStyleSheet(self.cb_style_sheet)
+		self.cb_s1_download.setEnabled(False)
+
+		self.cb_s2_complete = QtWidgets.QCheckBox('Installation Complete')
+		self.cb_s2_complete.setStyleSheet(self.cb_style_sheet)
+		self.cb_s2_complete.setEnabled(False)
 
 		self.lbl_title = QtWidgets.QLabel("Mount Point Setup")
 		# self.lbl_title.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.MinimumExpanding)
@@ -128,7 +133,17 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.btn_install_browse = QtWidgets.QPushButton("Browse")
 		self.btn_install_browse.setMinimumWidth(100)
 
+		self.task_description = QtWidgets.QLabel()
+
+		self.progress_bar = QtWidgets.QProgressBar()
+		self.progress_bar.setMinimum(0)
+		self.progress_bar.setMaximum(100)
+		self.progress_bar.setAlignment(QtCore.Qt.AlignCenter)
+
 		self.btn_left = QtWidgets.QPushButton("Cancel")
+		btn_left_retain = self.btn_left.sizePolicy()
+		btn_left_retain.setRetainSizeWhenHidden(True)
+		self.btn_left.setSizePolicy(btn_left_retain)
 		self.btn_left.setStyleSheet("""
 			QPushButton{			
 				background-color:#636363;
@@ -194,28 +209,31 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		# State machine ------------------
 		self.state_machine = QtCore.QStateMachine()
 		self.s0_install = QtCore.QState()
-		self.s1_complete = QtCore.QState()
+		self.s1_download = QtCore.QState()
+		self.s2_complete = QtCore.QState()
 
 		# Entry point for setup
 		# Transitions
-		self.trans_s0_s1 = self.s0_install.addTransition(self.btn_right.clicked, self.s1_complete)
-		self.trans_s1_s0 = self.s1_complete.addTransition(self.btn_left.clicked, self.s0_install)
+		self.trans_s0_s1 = self.s0_install.addTransition(self.btn_right.clicked, self.s1_download)
+		self.trans_s1_s2 = self.s1_download.addTransition(self.btn_right.clicked, self.s2_complete)
 
 		# Add states
 		self.state_machine.addState(self.s0_install)
-		self.state_machine.addState(self.s1_complete)
+		self.state_machine.addState(self.s1_download)
+		self.state_machine.addState(self.s2_complete)
 		self.state_machine.setInitialState(self.s0_install)
 
 		# Connections
 		self.s0_install.entered.connect(self.on_s0_install_entered)
-		self.s1_complete.entered.connect(self.on_install_pressed)
-		self.s1_complete.entered.connect(self.on_s1_complete_entered)
+		self.s1_download.entered.connect(self.on_install_pressed)
+		self.s1_download.entered.connect(self.on_s1_download_entered)
+		self.s2_complete.entered.connect(self.on_s2_complete_entered)
 
 		# Properties
 		self.s0_install.assignProperty(self.btn_left, "text", "Cancel")
 		self.s0_install.assignProperty(self.btn_right, "text", "Install")
-		self.s1_complete.assignProperty(self.btn_left, "text", "Back")
-		self.s1_complete.assignProperty(self.btn_right, "text", "Set Sail!")
+		self.s1_download.assignProperty(self.btn_right, "text", "Next")
+		self.s2_complete.assignProperty(self.btn_right, "text", "Set Sail!")
 
 		self.state_machine.start()
 
@@ -223,7 +241,8 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.steps_layout = QtWidgets.QVBoxLayout()
 		self.steps_layout.addWidget(self.lbl_banner, 0, QtCore.Qt.AlignCenter | QtCore.Qt.AlignTop)
 		self.steps_layout.addWidget(self.cb_s0_install, 0, QtCore.Qt.AlignCenter)
-		self.steps_layout.addWidget(self.cb_s1_complete, 0, QtCore.Qt.AlignCenter)
+		self.steps_layout.addWidget(self.cb_s1_download, 0, QtCore.Qt.AlignCenter)
+		self.steps_layout.addWidget(self.cb_s2_complete, 0, QtCore.Qt.AlignCenter)
 		self.steps_layout.setContentsMargins(30, 30, 30, 100)
 
 		self.title_layout = QtWidgets.QHBoxLayout()
@@ -270,6 +289,8 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.user_layout = QtWidgets.QVBoxLayout()
 		self.user_layout.addLayout(self.title_layout)
 		self.user_layout.addLayout(self.info_layout)
+		self.user_layout.addWidget(self.task_description)
+		self.user_layout.addWidget(self.progress_bar)
 		self.user_layout.addLayout(self.button_layout, QtCore.Qt.AlignBottom)
 
 		self.main_layout = QtWidgets.QHBoxLayout()
@@ -286,6 +307,13 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		# Wait for user input
 		self.exec_()
+
+	def setProgress(self, value):
+		# print('progress value = {}'.format(value))
+		if value > 100:
+			value = 100
+		self.progress_bar.setValue(value)
+
 
 	def on_le_mount_text_changed(self, text):
 		"""
@@ -322,8 +350,8 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		""".format(self.armada_root_path)
 		self.cb_s0_install.setChecked(True)
 		self.cb_s0_install.setStyleSheet(self.cb_s0_style)
-		self.cb_s1_complete.setChecked(False)
-		self.cb_s1_complete.setStyleSheet(self.cb_s0_style)
+		self.cb_s2_complete.setChecked(False)
+		self.cb_s2_complete.setStyleSheet(self.cb_s0_style)
 
 		self.lbl_description.clear()
 		self.lbl_description.setHtml("""<p>Choose an installation directory:</p>""")
@@ -346,7 +374,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		self.adjustSize()
 
-	def on_s1_complete_entered(self):
+	def on_s1_download_entered(self):
 		# Steps
 		self.cb_s1_style = """
 		QCheckBox::indicator:checked:disabled {{
@@ -357,16 +385,42 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			image: url({0}/resources/icon/checkbox_unchecked.svg);
 		}}
 		""".format(self.armada_root_path)
-		self.cb_s0_style = """
+		self.cb_s1_download.setChecked(True)
+		self.cb_s1_download.setStyleSheet(self.cb_s1_style)
+
+		self.lbl_description.clear()
+
+		self.lbl_title.setText('Installing')
+
+		# Hide install path gui
+		self.lbl_install_dir.hide()
+		self.le_install_dir.hide()
+		self.btn_install_browse.hide()
+		self.lbl_full_path.hide()
+		self.le_full_path.hide()
+		self.install_dir_layout.setContentsMargins(0, 0, 0, 0)
+		self.lbl_armada_ver.hide()
+		self.cb_version_numbers.hide()
+		self.armada_version_layout.setContentsMargins(0, 0, 0, 0)
+
+		# S0
+		self.btn_left.hide()
+
+		self.adjustSize()
+
+	def on_s2_complete_entered(self):
+		# Steps
+		self.cb_s2_style = """
+		QCheckBox::indicator:checked:disabled {{
+			image: url({0}/resources/icon/checkbox_unchecked.svg);
+			background: #de6cff;
+		}}
 		QCheckBox::indicator:unchecked:disabled{{
 			image: url({0}/resources/icon/checkbox_unchecked.svg);
-			background: #29dff7;
 		}}
 		""".format(self.armada_root_path)
-		self.cb_s0_install.setChecked(False)
-		self.cb_s0_install.setStyleSheet(self.cb_s0_style)
-		self.cb_s1_complete.setChecked(True)
-		self.cb_s1_complete.setStyleSheet(self.cb_s1_style)
+		self.cb_s2_complete.setChecked(True)
+		self.cb_s2_complete.setStyleSheet(self.cb_s2_style)
 
 		# Show mount gui
 		self.lbl_install_dir.hide()
@@ -383,7 +437,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.lbl_description.setFixedHeight(int(self.lbl_description.document().size().toSize().width()))
 
 		self.lbl_description.setHtml("""
-		<p>You're ready to shove off!<br>
+		<p>You're ready to shove off! Bon voyage!<br>
 		</br>
 		<br></br>
 		<br></br>
@@ -391,12 +445,12 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		<blockquote><i>{1}</i></blockquote>""".format(self.cb_version_numbers.currentText(), self.le_full_path.text()))
 
 		self.install_dir_layout.setContentsMargins(0, 0, 0, 0)
-		self.lbl_title.setText('Bon Voyage!')
+		self.lbl_title.setText('Installation Complete')
+		self.progress_bar.hide()
+		self.task_description.hide()
 
 		# Global gui update
-		self.btn_left.clicked.disconnect(self.on_cancel_pressed)
-		self.btn_left.setDisabled(True)
-		self.btn_left.hide()
+		self.btn_right.setDisabled(False)
 		self.btn_right.clicked.connect(self.on_accept_pressed)
 		self.enter_pressed.connect(self.on_accept_pressed)
 
@@ -424,49 +478,25 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		save_path = '{0}/armada_pipeline.zip'.format(self.le_full_path.text())
 
-		##Python 3
-		import urllib.request
-		print("download started!")
-		filename, headers = urllib.request.urlretrieve(release_url, filename=save_path)
-		print("download complete!")
-		print("download file location: ", filename)
-		print("download headers: ", headers)
+		self.btn_left.setDisabled(True)
+		self.btn_right.setDisabled(True)
 
-		import zipfile
+		self.thread = DownloadThread(self, release_url, 'armada_pipeline.zip', save_path, self.le_full_path.text())
+		self.thread.update_gui.connect(self.on_update_gui)
+		self.thread.update_progress.connect(self.setProgress)
+		self.thread.set_extracted_dir.connect(self.on_set_extracted)
+		self.thread.start()
 
-		params = headers.get('Content-Disposition', '')
-		filename = params.split('; filename=')[1]
+	def on_set_extracted(self, str):
+		self.extracted_directory = str
+		self.btn_right.setDisabled(False)
 
-		with zipfile.ZipFile(save_path, 'r') as zip_ref:
-			zip_ref.extractall(os.path.join(self.le_full_path.text()))
-
-		# Rename unzipped folder
-		try:
-			os.rename(save_path.rpartition('.zip')[0], os.path.join(self.le_full_path.text(), filename.rpartition('.zip')[0]))
-			self.extracted_directory = os.path.join(self.le_full_path.text(), filename.rpartition('.zip')[0]).replace('\\', '/')
-
-			# Delete zip file
-			os.remove(save_path)
-
-
-		except FileExistsError as e:
-			os.remove(save_path)
-			os.remove(save_path.rpartition('.zip')[0])
-			raise FileExistsError('')
-
-		# import requests
-		# import zipfile
-		# import io
-		#
-		# r = requests.get(release_url)
-		# z = zipfile.ZipFile(io.BytesIO(r.content))
-		# z.extractall(save_path)
-
+	def on_update_gui(self, text):
+		self.task_description.setText(text)
 
 	def on_accept_pressed(self):
 		"""Run Armada after installation
 		"""
-
 		install_dir = self.le_install_dir.text()
 		print(install_dir)
 		print(self.extracted_directory)
@@ -485,11 +515,94 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			super(ArmadaInstaller, self).keyPressEvent(event)
 
 
+import threading
+import urllib
+import urllib.request
+
+class DownloadThread(QtCore.QThread):
+	update_gui = QtCore.Signal(str)
+	update_progress = QtCore.Signal(float)
+	set_extracted_dir = QtCore.Signal(str)
+
+	def __init__(self, parent, url, tmp_file_name, save_path, le_full_path, ):
+		super(DownloadThread, self).__init__()
+		self.url = url
+		self.tmp_file_name = tmp_file_name
+		self.parent = parent
+		self.save_path = save_path
+		self.le_full_path = le_full_path
+
+	def run(self):
+
+		# Set the text to the current task
+		self.update_gui.emit("Gatherin' booty...")
+		print('adfadfadf')
+		# filename, headers = urllib.request.urlretrieve(self.url, filename=self.save_path)
+		u = urllib.request.urlopen(self.url)
+		meta = u.info()
+		print(meta)
+		file_size = int(meta.get('Content-Length'))
+		params = meta.get('Content-Disposition')
+		filename = params.split('; filename=')[1]
+		# file_size = headers.get('Content-Length', '')
+		print('file_size = {}'.format(file_size))
+
+		f = open(self.save_path, 'wb')
+
+		downloaded_bytes = 0
+		block_size = 1024 * 8
+		while True:
+			buffer = u.read(block_size)
+			if not buffer:
+				break
+
+			f.write(buffer)
+			downloaded_bytes += block_size
+			# print('downloaded_bytes = {}'.format(downloaded_bytes))
+			self.update_progress.emit(float(downloaded_bytes) / file_size * 100)
+		f.close()
+
+		# unzip
+		self.update_gui.emit("Swabbin' the decks...")
+
+		import zipfile
+		# with zipfile.ZipFile(save_path, 'r') as zip_ref:
+		# 	zip_ref.extractall(os.path.join(self.le_full_path))
+
+		zf = zipfile.ZipFile(self.save_path)
+		uncompress_size = sum((file.file_size for file in zf.infolist()))
+
+		extracted_size = 0
+
+		for file in zf.infolist():
+			extracted_size += file.file_size
+			percentage = extracted_size * 100 / uncompress_size
+			self.update_progress.emit(percentage)
+			zf.extract(file.filename, self.le_full_path)
+		zf.close()
+
+		# Rename unzipped folder
+		try:
+			os.rename(self.save_path.rpartition('.zip')[0], os.path.join(self.le_full_path, filename.rpartition('.zip')[0]))
+			self.set_extracted_dir.emit(os.path.join(self.le_full_path, filename.rpartition('.zip')[0]).replace('\\', '/'))
+
+		except FileExistsError as e:
+			os.remove(self.save_path)
+			os.remove(self.save_path.rpartition('.zip')[0])
+			raise FileExistsError('')
+
+		# Delete zip file
+		os.remove(self.save_path)
+		self.update_gui.emit("Complete!")
+
+		return
+
 if __name__ == "__main__":
 	# Run Armada launcher
 	app = QtWidgets.QApplication(sys.argv)
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
 
-	ArmadaInstaller()
+	window = ArmadaInstaller()
+	window.show()
 
 	sys.exit(app.exec_())
