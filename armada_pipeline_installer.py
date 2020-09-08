@@ -4,6 +4,8 @@ Module for prep asset popup.
 import os
 import sys
 import platform
+import requests
+import json
 
 from Qt import QtCore
 from Qt import QtWidgets
@@ -115,10 +117,39 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.lbl_armada_ver.setText("Armada Pipeline version:")
 		self.lbl_armada_ver.setStyleSheet(resource.style_sheet('setup'))
 
+		# from html2json import collect
+		#
+		# headers = {'Content-type': 'application/json'}
+		# releases_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases'
+		# response = requests.get(releases_url)
+		# template = {
+		# 	"details": {
+		# 		"div": {
+		# 			"div": {
+		# 				"div": {
+		# 					"a href": []
+		# 				}
+		# 			}
+		# 		}
+		# 	}
+		# }
+		# asdf = collect(response.text, template=template)
+		#
+		# ContentUrl = json.dumps({
+		# 	'url': str(releases_url),
+		# 	'page_content': response.text,
+		# })
+		#
+		# json_data = json.loads(response.content)
+		# # response = urllib.request.urlopen(releases_url)
+		# things1 = response.read()
+		# info = json.loads(str(js))
+		# things = json.loads(response.content.decode("utf-8"))
+		# print(response.json()["name"])
+
 		self.armada_versions = ['2020.09.02-beta']
 		self.cb_version_numbers = QtWidgets.QComboBox()
 		self.cb_version_numbers.addItems(self.armada_versions)
-
 
 		self.lbl_full_path = QtWidgets.QLabel()
 		self.lbl_full_path.setText("Full path:")
@@ -500,6 +531,12 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		install_dir = self.le_install_dir.text()
 		print(install_dir)
 		print(self.extracted_directory)
+
+		from pyshortcuts import make_shortcut
+
+		make_shortcut('/home/user/bin/myapp.py', name='MyApp',
+					  icon='/home/user/icons/myicon.ico', startmenu=True, desktop=True)
+
 		import subprocess
 		subprocess.Popen(os.path.join(self.extracted_directory, 'armada_pipeline.exe'))
 		self.close()
@@ -536,16 +573,13 @@ class DownloadThread(QtCore.QThread):
 
 		# Set the text to the current task
 		self.update_gui.emit("Gatherin' booty...")
-		print('adfadfadf')
-		# filename, headers = urllib.request.urlretrieve(self.url, filename=self.save_path)
+
+		# Download data
 		u = urllib.request.urlopen(self.url)
 		meta = u.info()
-		print(meta)
 		file_size = int(meta.get('Content-Length'))
 		params = meta.get('Content-Disposition')
 		filename = params.split('; filename=')[1]
-		# file_size = headers.get('Content-Length', '')
-		print('file_size = {}'.format(file_size))
 
 		f = open(self.save_path, 'wb')
 
@@ -558,7 +592,6 @@ class DownloadThread(QtCore.QThread):
 
 			f.write(buffer)
 			downloaded_bytes += block_size
-			# print('downloaded_bytes = {}'.format(downloaded_bytes))
 			self.update_progress.emit(float(downloaded_bytes) / file_size * 100)
 		f.close()
 
@@ -566,8 +599,6 @@ class DownloadThread(QtCore.QThread):
 		self.update_gui.emit("Swabbin' the decks...")
 
 		import zipfile
-		# with zipfile.ZipFile(save_path, 'r') as zip_ref:
-		# 	zip_ref.extractall(os.path.join(self.le_full_path))
 
 		zf = zipfile.ZipFile(self.save_path)
 		uncompress_size = sum((file.file_size for file in zf.infolist()))
@@ -591,7 +622,7 @@ class DownloadThread(QtCore.QThread):
 			os.remove(self.save_path.rpartition('.zip')[0])
 			raise FileExistsError('')
 
-		# Delete zip file
+		# Clean up by deleting zip file
 		os.remove(self.save_path)
 		self.update_gui.emit("Complete!")
 
