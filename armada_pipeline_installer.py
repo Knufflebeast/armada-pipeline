@@ -4,6 +4,7 @@ Module for prep asset popup.
 import os
 import sys
 import platform
+import subprocess
 import requests
 import json
 
@@ -519,6 +520,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.thread.start()
 
 	def on_set_extracted(self, str):
+		print('Extracted directory = {}'.format(str))
 		self.extracted_directory = str
 		self.btn_right.setDisabled(False)
 
@@ -530,15 +532,20 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		"""
 		install_dir = self.le_install_dir.text()
 		print(install_dir)
-		print(self.extracted_directory)
 
-		from pyshortcuts import make_shortcut
+		# from pyshortcuts import make_shortcut
+		#
+		# make_shortcut('/home/user/bin/myapp.py', name='MyApp',
+		# 			  icon='/home/user/icons/myicon.ico', startmenu=True, desktop=True)
 
-		make_shortcut('/home/user/bin/myapp.py', name='MyApp',
-					  icon='/home/user/icons/myicon.ico', startmenu=True, desktop=True)
-
-		import subprocess
-		subprocess.Popen(os.path.join(self.extracted_directory, 'armada_pipeline.exe'))
+		# Path defaults
+		if platform.system().lower() in ['windows']:
+			armada_exe = 'armada_pipeline.exe'
+		elif platform.system().lower() in ['darwin']:
+			armada_exe = 'armada_pipeline'
+		subprocess.Popen(os.path.join(self.extracted_directory, armada_exe))
+		import time
+		time.sleep(5)
 		self.close()
 
 	def keyPressEvent(self, event):
@@ -605,11 +612,20 @@ class DownloadThread(QtCore.QThread):
 
 		extracted_size = 0
 
-		for file in zf.infolist():
-			extracted_size += file.file_size
-			percentage = extracted_size * 100 / uncompress_size
-			self.update_progress.emit(percentage)
-			zf.extract(file.filename, self.le_full_path)
+		if platform.system().lower() in ['windows']:
+			for file in zf.infolist():
+				extracted_size += file.file_size
+				percentage = extracted_size * 100 / uncompress_size
+				self.update_progress.emit(percentage)
+				zf.extract(file.filename, self.le_full_path)
+		elif platform.system().lower() in ['darwin']:
+			for file in zf.infolist():
+				extracted_size += file.file_size
+				percentage = extracted_size * 100 / uncompress_size
+				self.update_progress.emit(percentage)
+				f = os.path.join(self.le_full_path, file.filename)
+				zf.extract(file, self.le_full_path)
+				subprocess.call(['chmod', 'u+x', f])
 		zf.close()
 
 		# Rename unzipped folder

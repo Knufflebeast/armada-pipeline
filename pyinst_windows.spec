@@ -6,7 +6,6 @@ added_files = [
     ('./core', 'core'),
     ('./resources', 'resources'),
 #    ('./config_user/config.json', 'config_user'),
-#    ('./logs', 'logs' ),
     ('./packages/marina', 'packages/marina'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),

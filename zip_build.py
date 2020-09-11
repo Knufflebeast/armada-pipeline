@@ -1,6 +1,7 @@
 # pyinstaller --noconfirm pyinst_windows.spec
 # pyinstaller --noconfirm pyinst_windows_installer.spec
 # pyinstaller --noconfirm pyinst_macos.spec
+# pyinstaller --noconfirm pyinst_macos_installer.spec
 
 import os
 import shutil
