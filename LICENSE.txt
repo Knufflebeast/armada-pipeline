@@ -1,4 +1,4 @@
-Copyright 2020 Mike Bourbeau
+Copyright 2020 Knufflebeast
 
 - Armada Pipeline is provided FREE for use in personal, educational, or commericial work without any warranties.
 - No permissions are granted to modify, edit, sell, or redistribute the code in this repo in any way.
