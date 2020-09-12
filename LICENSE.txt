@@ -1,0 +1,21 @@
+Copyright 2020 Knufflebeast
+
+- Armada Pipeline is provided FREE for use in personal, educational, or commericial work without any warranties.
+- No permissions are granted to modify, edit, sell, or redistribute the code in this repo in any way.
+- No pull requests will be accepted for this repo.
+- Contributions ARE accepted in Marina, Launcher, and Atlantis repos under the Apache v2 license.
+
+
+A license key grants you permission to use Armada Pipeline without any restrictions other than the Conditions listed below.
+
+
+Conditions:
+1) Armada Pipeline requires a license key to use which can be obtained for free on its gumroad.com product page:
+	https://gumroad.com/products/YwBqX
+2) Only use Armada Pipelinen for good!
+
+
+
+
+
+

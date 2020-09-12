@@ -17,7 +17,7 @@ class Logger():
 		:param logger_name: root logger name
 		"""
 
-		self.log_dir = os.path.join(definitions.ROOT_PATH, 'logs')
+		self.log_dir = os.path.join(definitions.TEMP_PATH, 'logs')
 		self.logger_name = logger_name
 
 		if not self.log_dir:

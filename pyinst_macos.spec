@@ -5,7 +5,7 @@ block_cipher = None
 added_files = [
     ('./core', 'core'),
     ('./resources', 'resources'),
-    ('./config_user/config.json', 'config_user'),
+#    ('./config_user/config.json', 'config_user'),
     ('./packages/marina', 'packages/marina'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),
@@ -21,7 +21,7 @@ added_files = [
 a = Analysis(['packages/launcher/main.py'],
              pathex=[
              './',
-    		 './armada'
+    		 './core'
     		 ],
              binaries=[],
              datas=added_files,
