@@ -118,37 +118,19 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.lbl_armada_ver.setText("Armada Pipeline version:")
 		self.lbl_armada_ver.setStyleSheet(resource.style_sheet('setup'))
 
-		# from html2json import collect
-		#
-		# headers = {'Content-type': 'application/json'}
-		# releases_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases'
-		# response = requests.get(releases_url)
-		# template = {
-		# 	"details": {
-		# 		"div": {
-		# 			"div": {
-		# 				"div": {
-		# 					"a href": []
-		# 				}
-		# 			}
-		# 		}
-		# 	}
-		# }
-		# asdf = collect(response.text, template=template)
-		#
-		# ContentUrl = json.dumps({
-		# 	'url': str(releases_url),
-		# 	'page_content': response.text,
-		# })
-		#
-		# json_data = json.loads(response.content)
-		# # response = urllib.request.urlopen(releases_url)
-		# things1 = response.read()
-		# info = json.loads(str(js))
-		# things = json.loads(response.content.decode("utf-8"))
-		# print(response.json()["name"])
+		releases_url = 'https://api.github.com/repos/Armada-Pipeline/armada-pipeline/releases'
+		response = requests.get(releases_url)
+		json_data = json.loads(response.content)
 
-		self.armada_versions = ['2020.09.02-beta']
+		self.armada_versions = []
+		for release in json_data:
+			if release['target_commitish'] == 'master':
+				release_name = release['tag_name']
+				if release_name.startswith("v"):
+					self.armada_versions.append(release_name[1:])
+				else:
+					self.armada_versions.append(release_name)
+
 		self.cb_version_numbers = QtWidgets.QComboBox()
 		self.cb_version_numbers.addItems(self.armada_versions)
 
