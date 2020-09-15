@@ -526,8 +526,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		elif platform.system().lower() in ['darwin']:
 			armada_exe = 'armada_pipeline'
 		subprocess.Popen(os.path.join(self.extracted_directory, armada_exe))
-		import time
-		time.sleep(5)
+
 		self.close()
 
 	def keyPressEvent(self, event):
@@ -540,8 +539,10 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		else:
 			super(ArmadaInstaller, self).keyPressEvent(event)
 
+	def closeEvent(self, event):
+		self.deleteLater()
 
-import threading
+
 import urllib
 import urllib.request
 
@@ -626,12 +627,12 @@ class DownloadThread(QtCore.QThread):
 
 		return
 
+
 if __name__ == "__main__":
 	# Run Armada launcher
 	app = QtWidgets.QApplication(sys.argv)
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
 
 	window = ArmadaInstaller()
-	window.show()
 
 	sys.exit(app.exec_())
