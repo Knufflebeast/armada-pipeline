@@ -494,12 +494,14 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		# Path defaults
 		if platform.system().lower() in ['windows']:
 			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_win10.zip'.format(self.cb_version_numbers.currentText())
+			os_type = 'win10'
 		elif platform.system().lower() in ['darwin']:
 			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_macos.zip'.format(self.cb_version_numbers.currentText())
+			os_type = 'macos'
 		else:
 			raise
 
-		save_path = '{0}/armada_pipeline.zip'.format(self.le_full_path.text())
+		save_path = '{0}/armada_pipeline_{1}.zip'.format(self.le_full_path.text(), os_type)
 
 		self.btn_left.setDisabled(True)
 		self.btn_right.setDisabled(True)
@@ -531,7 +533,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		# Path defaults
 		if platform.system().lower() in ['windows']:
-			armada_exe = 'armada_pipeline.exe'
+			armada_exe = 'Armada Pipeline.exe'
 		elif platform.system().lower() in ['darwin']:
 			armada_exe = 'armada_pipeline'
 		subprocess.Popen(os.path.join(self.extracted_directory, armada_exe))
