@@ -88,3 +88,56 @@ QPushButton:disabled{
 }
 
 
+/*QComboBox{*/
+/*	background-color: #2e7a78;*/
+/*	!*background-color: #262626; *!*/
+/*}*/
+/*QComboBox::drop-down{*/
+/*	border: 0px;*/
+/*}*/
+/*QComboBox::down-arrow*/
+/*{*/
+/*    image: url(resources/icon/arrow_down_white.svg);*/
+/*    width: 14px;*/
+/*    height: 14px;*/
+/*}*/
+
+
+QComboBox {
+    background: #262626;
+    font: 12px "Roboto Thin";
+    padding: 1px 18px 1px 20px;
+    border: none;
+}
+QComboBox:hover{
+    background: #454545;
+    font: 12px "Roboto Thin";
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+}
+QComboBox::drop-down{
+	border: 0px;
+}
+QComboBox::down-arrow
+{
+    image: url(resources/icon/arrow_down_white.svg);
+    width: 14px;
+    height: 14px;
+}
+QAbstractItemView
+{
+    border: 0px;
+	font: 12px "Roboto Thin" white;
+    selection-background-color: #2e7a78;
+	outline: none;
+}
+QAbstractItemView:item
+{
+    height: 30px;
+	align-content: center;
+}
+QAbstractItemView:item:focus
+{
+	background-color: #2e7a78;
+}

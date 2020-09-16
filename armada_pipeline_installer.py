@@ -121,18 +121,27 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		releases_url = 'https://api.github.com/repos/Armada-Pipeline/armada-pipeline/releases'
 		response = requests.get(releases_url)
 		json_data = json.loads(response.content)
+		# json_data = {'fake':''}
 
 		self.armada_versions = []
 		for release in json_data:
-			if release['target_commitish'] == 'master':
+			if isinstance(release, str):
+				self.armada_versions.append('v2020.09.20-beta')
+				self.armada_versions.append('v2020.09.15-beta')
+				break
+			elif release['target_commitish'] == 'master' and release['prerelease'] is False:
 				release_name = release['tag_name']
 				if release_name.startswith("v"):
 					self.armada_versions.append(release_name[1:])
 				else:
 					self.armada_versions.append(release_name)
 
-		self.cb_version_numbers = QtWidgets.QComboBox()
+		self.cb_version_numbers = VersionsComboBox(self)
 		self.cb_version_numbers.addItems(self.armada_versions)
+		self.cb_version_numbers.setMinimumHeight(30)
+		self.cb_version_numbers.setStyleSheet(resource.style_sheet('setup'))
+		self.cb_version_numbers.setView(QtWidgets.QListView())
+		self.cb_version_numbers.view().window().setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.FramelessWindowHint | QtCore.Qt.NoDropShadowWindowHint );
 
 		self.lbl_full_path = QtWidgets.QLabel()
 		self.lbl_full_path.setText("Full path:")
@@ -627,6 +636,56 @@ class DownloadThread(QtCore.QThread):
 
 		return
 
+
+class VersionsComboBox(QtWidgets.QComboBox):
+	def __init__(self, parent=None):
+		super(VersionsComboBox, self).__init__(parent)
+
+	def paintEvent(self, e: QtGui.QPaintEvent) -> None:
+		try:
+			rect_image = QtCore.Qt.QRect(
+				self.rect().left() + 6,
+				self.rect().top(),
+				self.rect().width() + 6,
+				self.rect().height()
+			)
+			painter = QtGui.QPainter()
+			painter.begin(self)
+			index_icon = self.currentData(item_role.ICON)
+			pixmap_icon = index_icon.pixmap(128, 128)
+			pixmap_icon_scaled = pixmap_icon.scaled(
+				rect_image.width(),
+				rect_image.height(),
+				QtCore.Qt.KeepAspectRatio,
+				QtCore.Qt.SmoothTransformation
+			)
+			QtWidgets.QApplication.style().drawItemPixmap(
+				painter,
+				rect_image,
+				QtCore.Qt.AlignLeft,
+				pixmap_icon_scaled
+			)
+			painter.end()
+
+		except AttributeError:
+			super(VersionsComboBox, self).paintEvent(e)
+
+
+class ComboItem(QtGui.QStandardItem):
+	def __init__(self, data=None):
+		""":param item: str - Dir_Name.dirType
+		"""
+		super(ComboItem, self).__init__()
+
+		# Item meta data
+		self.item_name = data
+		self.item_icon = resource.icon(self.item_name, 'png')
+
+	def data(self, role):
+		if role == item_role.NAME:
+			return self.item_name
+		if role == item_role.ICON:
+			return self.item_icon
 
 if __name__ == "__main__":
 	# Run Armada launcher
