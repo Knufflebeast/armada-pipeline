@@ -535,7 +535,7 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		if platform.system().lower() in ['windows']:
 			armada_exe = 'Armada Pipeline.exe'
 		elif platform.system().lower() in ['darwin']:
-			armada_exe = 'armada_pipeline'
+			armada_exe = 'Armada Pipeline'
 		subprocess.Popen(os.path.join(self.extracted_directory, armada_exe))
 
 		self.close()
