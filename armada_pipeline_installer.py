@@ -15,6 +15,7 @@ from Qt import QtGui
 from core import definitions
 from core import resource
 from core import path_maker
+from core.model import item_role
 
 import utilsa
 
