@@ -15,13 +15,17 @@ QSvg {
   fill: #ff0000;
 }
 
+QTextBrowser{
+	background-color: transparent;
+}
+
 QLineEdit{
     background: #424242;
     color: #DADADA ;
     font: 12px "Roboto-Thin";
     border: none;
     height: 30px;
-    border-radius: 15px;
+	padding-left: 10px;
 }
 
 QSplitter::handle:horizontal {
@@ -140,4 +144,8 @@ QAbstractItemView:item
 QAbstractItemView:item:focus
 {
 	background-color: #2e7a78;
+}
+
+QLabel{
+	background-color: transparent;
 }
