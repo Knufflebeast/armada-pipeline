@@ -40,111 +40,38 @@ class CreateUsername(QtWidgets.QWidget):
 		self.parent = parent
 		self.armada_root_path = definitions.ROOT_PATH
 
-		self.setWindowIcon(resource.icon('armada_logo', 'png'))
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+		# self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.installEventFilter(self)
 		self.setStyleSheet(resource.style_sheet('setup'))
-		self.setFixedWidth(600)
 		self.sizeHint()
 
-		# self.lbl_step_username = QtWidgets.QPushButton("ABOUT YOU")
-		# self.lbl_step_username.setStyleSheet("""
-		# 	QPushButton{
-		# 		background: transparent;
-		# 		height: 30px;
-		# 		font: 10px;
-		# 		font-weight: normal;
-		# 		color: #a6a6a6
-		# 	}
-		# 	QPushButton:hover{
-		# 		background: transparent;
-		# 		color: #FFFFFF
-		# 	}
-		# 	QPushButton:hover:pressed{
-		# 		background: transparent;
-		# 	}
-		# 	QPushButton:pressed{
-		# 		background:  transparent;
-		# 	}
-		# """)
-		#
-		# pix_arrow_right_1_ = QtGui.QPixmap(resource.color_svg('arrow_right', 1024, '#a6a6a6', return_type=resource.PIXMAP))
-		# self.pix_arrow_right_1 = pix_arrow_right_1_.scaled(20, 20)
-		# self.lbl_arrow_right_1 = QtWidgets.QLabel()
-		# self.lbl_arrow_right_1.setPixmap(self.pix_arrow_right_1)
-		#
-		# self.lbl_step_workspace = QtWidgets.QPushButton("CREATE WORKSPACE")
-		# self.lbl_step_workspace.setStyleSheet("font: 10px; font-weight: normal;")
-		# self.lbl_step_workspace.setStyleSheet("""
-		# 	QPushButton{
-		# 		background: transparent;
-		# 		height: 30px;
-		# 		font: 10px;
-		# 		font-weight: bold;
-		# 		color: #FFFFFF
-		# 	}
-		# 	QPushButton:hover{
-		# 		background: transparent;
-		# 		color: #FFFFFF
-		# 	}
-		# 	QPushButton:hover:pressed{
-		# 		background: transparent;
-		# 	}
-		# 	QPushButton:pressed{
-		# 		background:  transparent;
-		# 	}
-		# """)
-		#
-		#
-		# pix_arrow_right_2_ = QtGui.QPixmap(resource.color_svg('arrow_right', 1024, '#a6a6a6', return_type=resource.PIXMAP))
-		# self.pix_arrow_right_2 = pix_arrow_right_2_.scaled(20, 20)
-		# self.lbl_arrow_right_2 = QtWidgets.QLabel()
-		# self.lbl_arrow_right_2.setPixmap(self.pix_arrow_right_2)
-		#
-		# self.lbl_step_project = QtWidgets.QPushButton("ADD YOUR FIRST PROJECT")
-		# self.lbl_step_project.setStyleSheet("font: 10px;font-weight: normal;")
-		# self.lbl_step_project.setStyleSheet("""
-		# 	QPushButton{
-		# 		background: transparent;
-		# 		height: 30px;
-		# 		font: 10px;
-		# 		font-weight: normal;
-		# 		color: #a6a6a6
-		# 	}
-		# 	QPushButton:hover{
-		# 		background: transparent;
-		# 		color: #FFFFFF
-		# 	}
-		# 	QPushButton:hover:pressed{
-		# 		background: transparent;
-		# 	}
-		# 	QPushButton:pressed{
-		# 		background:  transparent;
-		# 	}
-		# """)
-
-		# self.lbl_title = QtWidgets.QLabel('Create Your Workspace')
-		# self.lbl_title.setStyleSheet("font: 20pt 'Roboto-Thin';")
-		#
-
-		self.tb_workspace_example = QtWidgets.QTextBrowser()
-		self.tb_workspace_example.setHtml("""
-			<p style="font-size:30px;">Welcome aboard to Armada Pipeline!</p>"""
+		self.tb_welcome = QtWidgets.QTextBrowser()
+		self.tb_welcome.setHtml("""
+			<p style="font-size:30px;">Welcome aboard!"""
 		)
 		# self.tb_workspace_example.setFixedHeight(int(self.tb_workspace_example.document().size().height()))
 
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
 
-		self.tb_workspace_description = QtWidgets.QTextBrowser()
-
-		self.tb_workspace_description.setHtml("""
-			<p style="font: 12px;font-weight: normal;">You're signed in as {0}.</p>""".format(data['CURRENT_ACCOUNT'])
+		self.tb_description = QtWidgets.QTextBrowser()
+		self.tb_description.setHtml("""
+			<p style="font: 12px;font-weight: normal;">You're signing in as {0}.</p>""".format(data['CURRENT_ACCOUNT'])
 		)
 		# self.tb_workspace_description.setMaximumHeight(self.tb_workspace_example.document().size().height())
 
-		self.lbl_workspace = QtWidgets.QLabel("What's your full name?")
+		# Input
+		self.lbl_username = QtWidgets.QLabel("What's your full name?")
+
 		self.le_username = QtWidgets.QLineEdit()
 		self.le_username.setMinimumHeight(40)
+		regexp = QtCore.QRegExp("^[a-zA-Z0-9- ]+$", QtCore.Qt.CaseInsensitive)
+		validator = QtGui.QRegExpValidator(regexp)
+		self.le_username.setValidator(validator)
+
+		self.hline_username = QtWidgets.QFrame()
+		self.hline_username.setFixedHeight(1)
+		self.hline_username.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self.hline_username.setStyleSheet("background-color: #636363;")
 
 		self.btn_next = QtWidgets.QPushButton('Next')
 		self.btn_next.setFixedWidth(100)
@@ -162,9 +89,13 @@ class CreateUsername(QtWidgets.QWidget):
 			}
 			QPushButton:pressed{
 				Background:  #2a615f;
+			}
+			QPushButton:disabled{
+				Background: #3b3b3b;
 			}'''
 		)
 		self.btn_next.setFixedSize(100, 40)
+		self.btn_next.setEnabled(False)
 
 		# self.lbl_disclaimer = QtWidgets.QTextBrowser()
 		# self.lbl_disclaimer.setReadOnly(True)
@@ -173,19 +104,21 @@ class CreateUsername(QtWidgets.QWidget):
 
 		# Layout --------------------------------------------
 		description_layout = QtWidgets.QVBoxLayout()
-		description_layout.addWidget(self.tb_workspace_example)
+		description_layout.addWidget(self.tb_welcome)
 
-		description_layout.addWidget(self.tb_workspace_description)
+		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
 		description_layout.setContentsMargins(30, 20, 30, 20)
 		description_layout.setSpacing(0)
 
 		input_layout = QtWidgets.QVBoxLayout()
-		input_layout.addWidget(self.lbl_workspace)
+		input_layout.addWidget(self.lbl_username)
+		input_layout.addSpacing(10)
 		input_layout.addWidget(self.le_username)
+		input_layout.addWidget(self.hline_username)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
 		input_layout.setContentsMargins(30, 20, 30, 20)
-		input_layout.setSpacing(10)
+		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_next)
@@ -219,10 +152,25 @@ class CreateUsername(QtWidgets.QWidget):
 
 		# Connections -----------------------------------
 		self.btn_next.clicked.connect(self._on_next)
+		self.le_username.textChanged.connect(self.check_le_state)
+
+	def check_le_state(self, *args, **kwargs):
+		"""
+		Makes sure line edit input is an email address
+		"""
+		sender = self.sender()
+		validator = sender.validator()
+		state = validator.validate(sender.text(), 0)[0]
+		if state == QtGui.QValidator.Acceptable:
+			self.btn_next.setEnabled(True)
+		elif state == QtGui.QValidator.Intermediate:
+			self.btn_next.setEnabled(False)
+		else:
+			self.btn_next.setEnabled(False)
 
 	def update(self):
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		self.tb_workspace_description.setHtml("""
+		self.tb_description.setHtml("""
 					<p style="font: 12px;font-weight: normal;">You're signed in as {0}.</p>""".format(
 			data['CURRENT_ACCOUNT']))
 

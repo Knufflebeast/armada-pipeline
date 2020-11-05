@@ -90,7 +90,7 @@ class BreadcrumbStartupSteps(QtWidgets.QTabBar):
 			}
 		""")
 
-		self.addTab('ABOUT YOU')
+		tab = self.addTab('ABOUT YOU')
 
 		icon = resource.color_svg('arrow_right', 128, '#a6a6a6')
 		tab = self.addTab(icon, '')
@@ -108,8 +108,13 @@ class BreadcrumbStartupSteps(QtWidgets.QTabBar):
 		self.currentChanged.connect(self._on_index_changed)
 
 	def _on_index_changed(self):
+		index_map = {
+			0: 0,
+			2: 1,
+			4: 2
+		}
 		# Send current breadcrumb widget to creation_flow_widget
-		self.breadcrumbIndexChanged.emit(self.currentIndex())
+		self.breadcrumbIndexChanged.emit(index_map[self.currentIndex()])
 
 
 	def paintEvent(self, _e):

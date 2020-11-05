@@ -55,14 +55,6 @@ class LoginFlow(QtWidgets.QDialog):
 		self.frame_login.setStyleSheet("QFrame{background: #202020;}")
 		self.frame_login.setFixedSize(300, 500)
 
-		self.lbl_title = QtWidgets.QLabel('Log in')
-		self.lbl_title.setStyleSheet("font: 20pt 'Roboto-Thin';")
-
-		self.hline_header = QtWidgets.QFrame()
-		self.hline_header.setFixedHeight(1)
-		self.hline_header.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-		self.hline_header.setStyleSheet("background-color: #636363;")
-
 		# Logo
 		self.logo_image = QtWidgets.QLabel(self)
 		self.logo_image.setObjectName('MainLogo')
@@ -89,8 +81,18 @@ class LoginFlow(QtWidgets.QDialog):
 		self.hline_or2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 		self.hline_or2.setStyleSheet("background-color: #656565;")
 
+		# Input
 		self.lbl_email = QtWidgets.QLabel('Email address')
+
 		self.le_email = QtWidgets.QLineEdit()
+		regexp = QtCore.QRegExp("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", QtCore.Qt.CaseInsensitive)
+		validator = QtGui.QRegExpValidator(regexp)
+		self.le_email.setValidator(validator)
+
+		self.hline_email = QtWidgets.QFrame()
+		self.hline_email.setFixedHeight(1)
+		self.hline_email.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self.hline_email.setStyleSheet("background-color: #636363;")
 
 		self.btn_log_in = QtWidgets.QPushButton('Log in')
 		self.btn_log_in.setStyleSheet('''
@@ -103,14 +105,18 @@ class LoginFlow(QtWidgets.QDialog):
 				Background: #369593;
 			}
 			QPushButton:hover:pressed{
-				Background: #2e7a78;
+				Background: #2a615f;
 			}
 			QPushButton:pressed{
 				Background:  #2a615f;
+			}
+			QPushButton:disabled{
+				Background: #3b3b3b;
 			}'''
 		)
-
 		self.btn_log_in.setFixedHeight(30)
+		# self.btn_log_in.setEnabled(False)
+
 
 		# self.lbl_disclaimer = QtWidgets.QTextBrowser()
 		# self.lbl_disclaimer.setReadOnly(True)
@@ -161,10 +167,12 @@ class LoginFlow(QtWidgets.QDialog):
 
 		input_layout = QtWidgets.QVBoxLayout()
 		input_layout.addWidget(self.lbl_email)
+		input_layout.addSpacing(5)
 		input_layout.addWidget(self.le_email)
+		input_layout.addWidget(self.hline_email)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
 		input_layout.setContentsMargins(0, 20, 0, 20)
-		input_layout.setSpacing(10)
+		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_log_in)
@@ -211,6 +219,21 @@ class LoginFlow(QtWidgets.QDialog):
 		# Connections -----------------------------------
 		self.btn_log_in_google.clicked.connect(self._on_google_log_in)
 		self.btn_log_in.clicked.connect(self._on_log_in)
+		# self.le_email.textChanged.connect(self.check_le_state)
+
+	def check_le_state(self, *args, **kwargs):
+		"""
+		Makes sure line edit input is an email address
+		"""
+		sender = self.sender()
+		validator = sender.validator()
+		state = validator.validate(sender.text(), 0)[0]
+		if state == QtGui.QValidator.Acceptable:
+			self.btn_log_in.setEnabled(True)
+		elif state == QtGui.QValidator.Intermediate:
+			self.btn_log_in.setEnabled(False)
+		else:
+			self.btn_log_in.setEnabled(False)
 
 	def _on_google_log_in(self):
 		from google_auth_oauthlib.flow import InstalledAppFlow

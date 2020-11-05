@@ -95,14 +95,14 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		frame_layout.setContentsMargins(0, 0, 0, 0)
 		frame_layout.setSpacing(0)
 
-		logo_layout = QtWidgets.QHBoxLayout()
-		logo_layout.addWidget(self.logo_image, 0, QtCore.Qt.AlignTop)
-		logo_layout.addWidget(self.breadcrumb_steps, 1, QtCore.Qt.AlignLeft)
-		logo_layout.setContentsMargins(10, 10, 10, 10)
-		logo_layout.setSpacing(5)
+		header_layout = QtWidgets.QHBoxLayout()
+		header_layout.addWidget(self.logo_image, 0, QtCore.Qt.AlignTop)
+		header_layout.addWidget(self.breadcrumb_steps, 1, QtCore.Qt.AlignLeft)
+		header_layout.setContentsMargins(10, 10, 10, 10)
+		header_layout.setSpacing(5)
 
 		input_layout = QtWidgets.QVBoxLayout(self.frame_left)
-		input_layout.addLayout(logo_layout)
+		input_layout.addLayout(header_layout)
 		input_layout.addWidget(self.sw_creation_flows)
 		# input_layout.addStretch()
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
@@ -127,15 +127,10 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# self.create_project_widget.complete.connect(self.create_project_widget.launch_armada)
 
 	def _on_breadcrumb_changed(self, index):
-		index_map = {
-			0: 0,
-			2: 1,
-			4: 2
-		}
 		# self.breadcrumb_steps.setCurrentIndex(index)
-		self.sw_creation_flows.setCurrentIndex(index_map[index])
+		self.sw_creation_flows.setCurrentIndex(index)
 		print(self.breadcrumb_steps.currentIndex())
-		print(index_map[index])
+		print(index)
 
 	def _on_user_next_pressed(self):
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
@@ -144,4 +139,3 @@ class CreationFlowWidget(QtWidgets.QWidget):
 	def _on_workspace_next_pressed(self):
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
 		self.create_project_widget.update()
-		# self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)

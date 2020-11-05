@@ -15,7 +15,7 @@ import utilsa
 logging = utilsa.Logger('armada')
 
 
-class CreateProject(QtWidgets.QDialog):
+class CreateProject(QtWidgets.QWidget):
 	"""Sets up user and/or shared data depending on type of setup process
 	"""
 
@@ -40,8 +40,6 @@ class CreateProject(QtWidgets.QDialog):
 		self.parent = parent
 		self.armada_root_path = definitions.ROOT_PATH
 
-		self.setWindowIcon(resource.icon('armada_logo', 'png'))
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.installEventFilter(self)
 		self.setStyleSheet(resource.style_sheet('setup'))
 		self.sizeHint()
@@ -62,12 +60,21 @@ class CreateProject(QtWidgets.QDialog):
 		# self.tb_workspace_description.setMaximumHeight(self.tb_workspace_example.document().size().height())
 
 		self.lbl_project = QtWidgets.QLabel('Project name')
+
 		self.le_project = QtWidgets.QLineEdit()
 		self.le_project.setPlaceholderText('e.g. Short Film, Platformer Game, Run Cycle Project, etc.')
 		self.le_project.setMinimumHeight(40)
+		regexp = QtCore.QRegExp("^[a-zA-Z0-9- ]+$", QtCore.Qt.CaseInsensitive)
+		validator = QtGui.QRegExpValidator(regexp)
+		self.le_project.setValidator(validator)
 
-		self.btn_complete = QtWidgets.QPushButton('Set Sail!')
-		self.btn_complete.setStyleSheet('''
+		self.hline_project = QtWidgets.QFrame()
+		self.hline_project.setFixedHeight(1)
+		self.hline_project.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self.hline_project.setStyleSheet("background-color: #636363;")
+
+		self.btn_next = QtWidgets.QPushButton('Next!')
+		self.btn_next.setStyleSheet('''
 			QPushButton{
 				Background:#2e7a78;
 				height: 30px;
@@ -81,9 +88,13 @@ class CreateProject(QtWidgets.QDialog):
 			}
 			QPushButton:pressed{
 				Background:  #2a615f;
+			}
+			QPushButton:disabled{
+				Background: #3b3b3b;
 			}'''
 		)
-		self.btn_complete.setFixedSize(100, 40)
+		self.btn_next.setFixedSize(100, 40)
+		self.btn_next.setEnabled(False)
 
 		# self.lbl_disclaimer = QtWidgets.QTextBrowser()
 		# self.lbl_disclaimer.setReadOnly(True)
@@ -101,13 +112,15 @@ class CreateProject(QtWidgets.QDialog):
 
 		input_layout = QtWidgets.QVBoxLayout()
 		input_layout.addWidget(self.lbl_project)
+		input_layout.addSpacing(10)
 		input_layout.addWidget(self.le_project)
+		input_layout.addWidget(self.hline_project)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
 		input_layout.setContentsMargins(30, 20, 30, 20)
-		input_layout.setSpacing(10)
+		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
-		btn_layout.addWidget(self.btn_complete)
+		btn_layout.addWidget(self.btn_next)
 		btn_layout.setAlignment(QtCore.Qt.AlignTop)
 		btn_layout.setContentsMargins(30, 20, 30, 20)
 		btn_layout.setSpacing(0)
@@ -137,7 +150,22 @@ class CreateProject(QtWidgets.QDialog):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_complete.clicked.connect(self._on_next)
+		self.btn_next.clicked.connect(self._on_next)
+		self.le_project.textChanged.connect(self.check_le_state)
+
+	def check_le_state(self, *args, **kwargs):
+		"""
+		Makes sure line edit input is an email address
+		"""
+		sender = self.sender()
+		validator = sender.validator()
+		state = validator.validate(sender.text(), 0)[0]
+		if state == QtGui.QValidator.Acceptable:
+			self.btn_next.setEnabled(True)
+		elif state == QtGui.QValidator.Intermediate:
+			self.btn_next.setEnabled(False)
+		else:
+			self.btn_next.setEnabled(False)
 
 	def launch_armada(self):
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')

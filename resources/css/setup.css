@@ -20,6 +20,14 @@ QTextBrowser{
 }
 
 QLineEdit{
+    background: transparent;
+    color: #DADADA ;
+    font: 12px "Roboto-Thin";
+    border: none;
+    height: 30px;
+	padding-left: 10px;
+}
+QLineEdit:focus{
     background: #424242;
     color: #DADADA ;
     font: 12px "Roboto-Thin";
@@ -76,6 +84,7 @@ QScrollBar::add-page {
 QPushButton{
     Background:#636363;
     height: 30px;
+	border-radius: 10;
     font: 12px "Roboto-Thin"
 }
 QPushButton:hover{
