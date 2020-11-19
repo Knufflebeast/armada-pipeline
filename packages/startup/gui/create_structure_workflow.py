@@ -11,7 +11,7 @@ import utilsa
 logging = utilsa.Logger('armada')
 
 
-class CreateUsername(QtWidgets.QWidget):
+class CreateStructureWorkflow(QtWidgets.QWidget):
 	"""Sets up user and/or shared data depending on type of setup process
 	"""
 
@@ -27,7 +27,7 @@ class CreateUsername(QtWidgets.QWidget):
 		Args:
 			flow: What part of setup is the user entering into?
 		"""
-		super(CreateUsername, self).__init__(parent)
+		super(CreateStructureWorkflow, self).__init__(parent)
 
 		self.logger = logging.getLogger('menu.' + self.__class__.__name__)
 		self.logger.info('Workplace creation starting...')
@@ -47,17 +47,25 @@ class CreateUsername(QtWidgets.QWidget):
 		self.btn_back.setIconSize(QtCore.QSize(30, 30))
 		self.btn_back.setFixedHeight(30)
 		self.btn_back.setStyleSheet(resource.style_sheet('push_button_w_icon'))
-		self.btn_back.hide()
 
 		self.tb_welcome = QtWidgets.QLabel()
 		self.tb_welcome.setText("""
-			<p style="font-size:30px;font-weight: normal;">Welcome aboard!</p>"""
+			<p style="font-size:30px;font-weight: normal;">How do you want to organize your work?</p>"""
 		)
+		self.tb_welcome.setWordWrap(True)
 
 		self.tb_description = QtWidgets.QLabel()
 		self.tb_description.setStyleSheet("""
-		"font: 12px;font-weight: normal; color: #CFCFCF;
-		""")
+			background-color: transparent;
+			font: 12px;
+			font-weight: normal"""
+		)
+		self.tb_description.setText("""
+			<p>Armada utilizes a <b>structure</b> system to enforce project-wide folder/file location and naming conventions.  
+			<p>These rules automatically determine what files and folders you can make and where they can be placed - so 
+			you can focus on what you do best: ART!</p>"""
+		)
+		self.tb_description.setWordWrap(True)
 
 		# Input
 		self.lbl_username = QtWidgets.QLabel("What's your full name?")

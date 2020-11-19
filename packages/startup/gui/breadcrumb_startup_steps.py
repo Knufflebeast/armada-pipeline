@@ -105,16 +105,16 @@ class BreadcrumbStartupSteps(QtWidgets.QTabBar):
 		self.addTab('ADD YOUR FIRST PROJECT')
 
 		# Connections ------------------------------------------
-		self.currentChanged.connect(self._on_index_changed)
+		# self.currentChanged.connect(self._on_index_changed)
 
-	def _on_index_changed(self):
-		index_map = {
-			0: 0,
-			2: 1,
-			4: 2
-		}
-		# Send current breadcrumb widget to creation_flow_widget
-		self.breadcrumbIndexChanged.emit(index_map[self.currentIndex()])
+	# def _on_index_changed(self):
+	# 	index_map = {
+	# 		0: 0,
+	# 		2: 1,
+	# 		4: 2
+	# 	}
+	# 	# Send current breadcrumb widget to creation_flow_widget
+	# 	self.breadcrumbIndexChanged.emit(index_map[self.currentIndex()])
 
 
 	def paintEvent(self, _e):

@@ -11,7 +11,7 @@ import utilsa
 logging = utilsa.Logger('armada')
 
 
-class CreateUsername(QtWidgets.QWidget):
+class CreateSoftware(QtWidgets.QWidget):
 	"""Sets up user and/or shared data depending on type of setup process
 	"""
 
@@ -27,7 +27,7 @@ class CreateUsername(QtWidgets.QWidget):
 		Args:
 			flow: What part of setup is the user entering into?
 		"""
-		super(CreateUsername, self).__init__(parent)
+		super(CreateSoftware, self).__init__(parent)
 
 		self.logger = logging.getLogger('menu.' + self.__class__.__name__)
 		self.logger.info('Workplace creation starting...')
@@ -47,7 +47,6 @@ class CreateUsername(QtWidgets.QWidget):
 		self.btn_back.setIconSize(QtCore.QSize(30, 30))
 		self.btn_back.setFixedHeight(30)
 		self.btn_back.setStyleSheet(resource.style_sheet('push_button_w_icon'))
-		self.btn_back.hide()
 
 		self.tb_welcome = QtWidgets.QLabel()
 		self.tb_welcome.setText("""

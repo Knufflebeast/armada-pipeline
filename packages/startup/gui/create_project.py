@@ -45,19 +45,22 @@ class CreateProject(QtWidgets.QWidget):
 		self.sizeHint()
 
 		# GUI -----------------------------------------------
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+		self.btn_back = QtWidgets.QPushButton()
+		self.btn_back.setIcon(resource.color_svg('arrow_left', 128, '#9E9E9E'))
+		self.btn_back.setIconSize(QtCore.QSize(30, 30))
+		self.btn_back.setFixedHeight(30)
+		self.btn_back.setStyleSheet(resource.style_sheet('push_button_w_icon'))
 
-		self.tb_workspace_welcome = QtWidgets.QTextBrowser()
-		self.tb_workspace_welcome.setHtml("""
-			<p style="font-size:30px;">Let's set up your first project</p>""".format(data['CURRENT_USERNAME'])
+		self.tb_welcome = QtWidgets.QLabel()
+		self.tb_welcome.setText("""
+			<p style="font: 30px;font-weight: normal;"> Let's set up your first project"""
 		)
-		# self.tb_workspace_example.setFixedHeight(int(self.tb_workspace_example.document().size().height()))
+		self.tb_welcome.setWordWrap(True)
 
-		self.tb_workspace_description = QtWidgets.QTextBrowser()
-		self.tb_workspace_description.setHtml("""
+		self.tb_description = QtWidgets.QLabel()
+		self.tb_description.setText("""
 			<p style="font: 12px;font-weight: normal;">What's something you and your team are currently working on?</p>"""
 		)
-		# self.tb_workspace_description.setMaximumHeight(self.tb_workspace_example.document().size().height())
 
 		self.lbl_project = QtWidgets.QLabel('Project name')
 
@@ -102,13 +105,18 @@ class CreateProject(QtWidgets.QWidget):
 		# self.lbl_disclaimer.setMinimumSize(100, 50)
 
 		# Layout --------------------------------------------
-		description_layout = QtWidgets.QVBoxLayout()
-		description_layout.addWidget(self.tb_workspace_welcome)
+		btn_back_layout = QtWidgets.QVBoxLayout()
+		btn_back_layout.addWidget(self.btn_back)
+		btn_back_layout.setAlignment(QtCore.Qt.AlignTop)
+		btn_back_layout.setContentsMargins(30, 20, 0, 20)
+		btn_back_layout.setSpacing(0)
 
-		description_layout.addWidget(self.tb_workspace_description)
+		description_layout = QtWidgets.QVBoxLayout()
+		description_layout.addWidget(self.tb_welcome)
+		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
 		description_layout.setContentsMargins(30, 20, 30, 20)
-		description_layout.setSpacing(0)
+		description_layout.setSpacing(30)
 
 		input_layout = QtWidgets.QVBoxLayout()
 		input_layout.addWidget(self.lbl_project)
@@ -140,7 +148,8 @@ class CreateProject(QtWidgets.QWidget):
 		# disclaimer_layout.setContentsMargins(0, 20, 0, 20)
 		# disclaimer_layout.setSpacing(0)
 
-		self.main_layout = QtWidgets.QVBoxLayout()
+		self.main_layout = QtWidgets.QHBoxLayout()
+		self.main_layout.addLayout(btn_back_layout)
 		self.main_layout.addLayout(contents_layout)
 		# self.main_layout.addLayout(disclaimer_layout)
 		# self.main_layout.setAlignment(QtCore.Qt.AlignBottom)
@@ -166,13 +175,6 @@ class CreateProject(QtWidgets.QWidget):
 			self.btn_next.setEnabled(False)
 		else:
 			self.btn_next.setEnabled(False)
-
-	def launch_armada(self):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		self.tb_workspace_welcome.setHtml("""
-					<p style="font-size:30px;">Arrrrr, {0}!</p>
-					<p style="font-size:30px;">What kind of work will you be doing?</p>""".format(
-			data['CURRENT_USERNAME']))
 
 	def _on_next(self):
 		project = self.le_project.text()

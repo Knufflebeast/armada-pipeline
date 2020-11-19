@@ -14,6 +14,9 @@ from startup.gui import breadcrumb_startup_steps
 from startup.gui import create_workspace
 from startup.gui import create_username
 from startup.gui import create_project
+from startup.gui import create_structure_workflow
+from startup.gui import create_structure_selection
+from startup.gui import create_software
 
 import utilsa
 
@@ -53,7 +56,6 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# self.resize(1300, 750)
 		self.sizeHint()
 
-
 		# GUI -----------------------------------------------
 		self.frame_left = QtWidgets.QFrame()
 		self.frame_left.setStyleSheet("QFrame{background: #202020;}")
@@ -74,19 +76,87 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# self.breadcrumb_steps.setTabEnabled(breadcrumb_startup_steps.WORKSPACE, False)
 		# self.breadcrumb_steps.setTabEnabled(breadcrumb_startup_steps.PROJECT, False)
 
-		self.create_username_widget = create_username.CreateUsername(self)
-		self.create_workspace_widget = create_workspace.CreateWorkspace(self)
-		self.create_project_widget = create_project.CreateProject(self)
+		self.username_widget = create_username.CreateUsername(self)
+		self.workspace_widget = create_workspace.CreateWorkspace(self)
+		self.project_widget = create_project.CreateProject(self)
+		self.structure_workflow_widget = create_structure_workflow.CreateStructureWorkflow(self)
+		# self.structure_selection_widget = create_structure_selection.CreateStructureSelection(self)
+		# self.software_widget = create_software.CreateSoftware(self)
 
 		# Creation stacked widget. Guides first setup flow
 		self.sw_creation_flows = QtWidgets.QStackedWidget(self)
 
-		self.sw_creation_flows.addWidget(self.create_username_widget)
-		self.sw_creation_flows.addWidget(self.create_workspace_widget)
-		self.sw_creation_flows.addWidget(self.create_project_widget)
+		self.sw_creation_flows.addWidget(self.username_widget)
+		self.sw_creation_flows.addWidget(self.workspace_widget)
+		self.sw_creation_flows.addWidget(self.project_widget)
+		self.sw_creation_flows.addWidget(self.structure_workflow_widget)
+		# self.sw_creation_flows.addWidget(self.structure_selection_widget)
+		# self.sw_creation_flows.addWidget(self.software_widget)
 
 		self.example_widget = QtWidgets.QWidget()
 		self.example_widget.setMaximumWidth(400)
+
+		# State machine ------------------
+		self.state_machine = QtCore.QStateMachine()
+		self.s0_username = QtCore.QState()
+		self.s1_workspace = QtCore.QState()
+		self.s2_project = QtCore.QState()
+		self.s3_structure_workflow = QtCore.QState()
+		self.s4_structure_sel = QtCore.QState()
+		self.s5_software = QtCore.QState()
+
+		# Transitions
+		# User next
+		self.trans_s0_s1 = self.s0_username.addTransition(self.username_widget.btn_next.clicked, self.s1_workspace)
+		# Workspace next
+		self.trans_s1_s2 = self.s1_workspace.addTransition(self.workspace_widget.btn_next.clicked, self.s2_project)
+		# Project next
+		self.trans_s2_s3 = self.s2_project.addTransition(self.project_widget.btn_next.clicked, self.s3_structure_workflow)
+		# Structure workflow next
+		self.trans_s3_s4 = self.s3_structure_workflow.addTransition(self.structure_workflow_widget.btn_next.clicked, self.s4_structure_sel)
+		# # Structure sel next
+		# self.trans_s4_s5 = self.s4_structure_sel.addTransition(self.structure_sel.btn_left.clicked, self.s5_software)
+		# # Software back
+		# self.trans_s5_s4 = self.s5_software.addTransition(self.software.btn_back.clicked, self.s4_structure_sel)
+		# # Structure sel back
+		# self.trans_s4_s3 = self.s4_structure_sel.addTransition(self.structure_sel.btn_back.clicked, self.s3_structure_workflow)
+		# Structure workflow back
+		self.trans_s3_s2 = self.s3_structure_workflow.addTransition(self.structure_workflow_widget.btn_back.clicked, self.s2_project)
+		# Project back
+		self.trans_s3_s2 = self.s2_project.addTransition(self.project_widget.btn_back.clicked, self.s1_workspace)
+		# Workspace back
+		self.trans_s2_s1 = self.s1_workspace.addTransition(self.workspace_widget.btn_back.clicked, self.s0_username)
+
+		# Add states
+		self.state_machine.addState(self.s0_username)
+		self.state_machine.addState(self.s1_workspace)
+		self.state_machine.addState(self.s2_project)
+		self.state_machine.addState(self.s3_structure_workflow)
+		self.state_machine.addState(self.s4_structure_sel)
+		self.state_machine.addState(self.s5_software)
+		self.state_machine.setInitialState(self.s0_username)
+
+		# Connections
+		self.s0_username.entered.connect(self.on_s0_username_entered)
+		self.s1_workspace.entered.connect(self.on_s1_workspace_entered)
+		self.s2_project.entered.connect(self.on_s2_project_entered)
+		self.s3_structure_workflow.entered.connect(self.on_s3_structure_workflow_entered)
+		self.s4_structure_sel.entered.connect(self.on_s4_structure_sel_entered)
+		self.s5_software.entered.connect(self.on_s5_software_entered)
+
+		self.state_machine.start()
+
+		# Properties
+		# self.s0_welcome.assignProperty(self.btn_left, "text", "Cancel")
+		# self.s0_welcome.assignProperty(self.btn_right, "text", "Begin Setup!")
+		# self.s1_mount_setup.assignProperty(self.btn_left, "text", "Back")
+		# self.s1_mount_setup.assignProperty(self.btn_right, "text", "Next")
+		# self.s2_structure_workflow.assignProperty(self.btn_left, "text", "Back")
+		# self.s2_structure_workflow.assignProperty(self.btn_right, "text", "Next")
+		# self.s3_structure_sel.assignProperty(self.btn_left, "text", "Back")
+		# self.s3_structure_sel.assignProperty(self.btn_right, "text", "Next")
+		# self.s4_software.assignProperty(self.btn_right, "text", "Back")
+		# self.s4_software.assignProperty(self.btn_right, "text", "Finish!")
 
 		# Layout --------------------------------------------
 		frame_layout = QtWidgets.QHBoxLayout()
@@ -119,23 +189,49 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.breadcrumb_steps.breadcrumbIndexChanged.connect(self._on_breadcrumb_changed)
+		# self.breadcrumb_steps.breadcrumbIndexChanged.connect(self._on_breadcrumb_changed)
 
 		# self.login_widget.loginPressed.connect(self.create_username_widget.update)
-		self.create_username_widget.nextPressed.connect(self._on_user_next_pressed)
-		self.create_workspace_widget.nextPressed.connect(self._on_workspace_next_pressed)
+		# self.username_widget.nextPressed.connect(self._on_user_next_pressed)
+		# self.workspace_widget.nextPressed.connect(self._on_workspace_next_pressed)
 		# self.create_project_widget.complete.connect(self.create_project_widget.launch_armada)
 
-	def _on_breadcrumb_changed(self, index):
-		# self.breadcrumb_steps.setCurrentIndex(index)
-		self.sw_creation_flows.setCurrentIndex(index)
-		print(self.breadcrumb_steps.currentIndex())
-		print(index)
+	# def _on_breadcrumb_changed(self, index):
+	# 	# self.breadcrumb_steps.setCurrentIndex(index)
+	# 	self.sw_creation_flows.setCurrentIndex(index)
+	# 	print(self.breadcrumb_steps.currentIndex())
+	# 	print(index)
+	#
+	# def _on_user_next_pressed(self):
+	# 	self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
+	# 	self.workspace_widget.update()
+	#
+	# def _on_workspace_next_pressed(self):
+	# 	self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
+	# 	self.project_widget.update()
 
-	def _on_user_next_pressed(self):
+	def on_s0_username_entered(self):
+		print('entered user')
+		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.ABOUT_YOU)
+		self.sw_creation_flows.setCurrentIndex(0)
+
+	def on_s1_workspace_entered(self):
+		print('entered workspace')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
-		self.create_workspace_widget.update()
+		self.sw_creation_flows.setCurrentIndex(1)
+		self.workspace_widget.update()
 
-	def _on_workspace_next_pressed(self):
+	def on_s2_project_entered(self):
+		print('entered project')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
-		self.create_project_widget.update()
+		self.sw_creation_flows.setCurrentIndex(2)
+
+	def on_s3_structure_workflow_entered(self):
+		print('entered structure workflow')
+		self.sw_creation_flows.setCurrentIndex(3)
+
+	def on_s4_structure_sel_entered(self):
+		print('entered structure selection')
+
+	def on_s5_software_entered(self):
+		print('entered software')

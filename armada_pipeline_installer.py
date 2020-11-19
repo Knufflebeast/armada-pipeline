@@ -228,7 +228,6 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			color: #FFFFFF;
 			font: 14px "Roboto-thin";
 			border: 0px;
-			
 		}""")
 
 		# State machine ------------------

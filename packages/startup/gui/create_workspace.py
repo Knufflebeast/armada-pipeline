@@ -46,21 +46,43 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.sizeHint()
 
 		# GUI -----------------------------------------------
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+		self.btn_back = QtWidgets.QPushButton()
+		self.btn_back.setIcon(resource.color_svg('arrow_left', 128, '#9E9E9E'))
+		self.btn_back.setIconSize(QtCore.QSize(30, 30))
+		self.btn_back.setFixedHeight(30)
+		self.btn_back.setStyleSheet(resource.style_sheet('push_button_w_icon'))
 
-		self.current_username = data['CURRENT_USERNAME']
-		self.tb_welcome = QtWidgets.QTextBrowser()
-		# self.tb_workspace_example.setFixedHeight(int(self.tb_workspace_example.document().size().height()))
+		self.tb_welcome = QtWidgets.QLabel()
 
-		self.tb_description = QtWidgets.QTextBrowser()
-		self.tb_description.setStyleSheet("background-color: transparent;")
-		self.tb_description.setHtml("""
-			<p style="font: 12px;font-weight: normal;">A <b>Workspace</b> is where your <b>Projects</b> will be stored. 
-			<p style="font: 12px;font-weight: normal;">Name it after the company you work for, a series of projects you're starting, or the type of work you'll be doing.</p>
-			<p style="font: 12px;font-weight: normal;">You can change this later, but it is strongly advised that you don't - so choose wisely!</p>"""
+		self.tb_description = QtWidgets.QLabel()
+		self.tb_description.setStyleSheet("""
+			background-color: transparent;
+			font: 12px;
+			font-weight: normal
+		""")
+		self.tb_description.setText("""
+			<p>A <b>workspace</b> is where all of your work will be stored.
+			<p>Name it after the company you work for, a series of projects you're starting, or the type of work you'll be doing.</p>
+			<p>You can change the name later, but it's strongly advised that you don't!</p>"""
 		)
-		# self.tb_workspace_description.setMaximumHeight(self.tb_workspace_example.document().size().height())
+		self.tb_description.setWordWrap(True)
 
+		# Mount point
+		self.lbl_mount_point = QtWidgets.QLabel('What drive should we mount the workspace to?')
+
+		self.le_mount_point = QtWidgets.QLineEdit()
+		self.le_mount_point.setPlaceholderText('e.g D:/OneDrive/Work')
+		self.le_mount_point.setMinimumHeight(40)
+		regexp = QtCore.QRegExp("^[a-zA-Z0-9_]+$", QtCore.Qt.CaseInsensitive)
+		validator = QtGui.QRegExpValidator(regexp)
+		self.le_mount_point.setValidator(validator)
+
+		self.hline_mount_point = QtWidgets.QFrame()
+		self.hline_mount_point.setFixedHeight(1)
+		self.hline_mount_point.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self.hline_mount_point.setStyleSheet("background-color: #636363;")
+
+		# Workspace name
 		self.lbl_workspace = QtWidgets.QLabel('Workspace name')
 
 		self.le_workspace = QtWidgets.QLineEdit()
@@ -104,37 +126,48 @@ class CreateWorkspace(QtWidgets.QWidget):
 		# self.lbl_disclaimer.setMinimumSize(100, 50)
 
 		# Layout --------------------------------------------
+		btn_back_layout = QtWidgets.QVBoxLayout()
+		btn_back_layout.addWidget(self.btn_back)
+		btn_back_layout.setAlignment(QtCore.Qt.AlignTop)
+		btn_back_layout.setContentsMargins(30, 20, 0, 20)
+		btn_back_layout.setSpacing(0)
+
 		description_layout = QtWidgets.QVBoxLayout()
 		description_layout.addWidget(self.tb_welcome)
-
 		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
 		description_layout.setContentsMargins(30, 20, 30, 20)
-		description_layout.setSpacing(0)
+		description_layout.setSpacing(30)
 
 		input_layout = QtWidgets.QVBoxLayout()
 		input_layout.addWidget(self.lbl_workspace)
 		input_layout.addSpacing(10)
 		input_layout.addWidget(self.le_workspace)
 		input_layout.addWidget(self.hline_workspace)
+		input_layout.addSpacing(20)
+		input_layout.addWidget(self.lbl_mount_point)
+		input_layout.addSpacing(10)
+		input_layout.addWidget(self.le_mount_point)
+		input_layout.addWidget(self.hline_mount_point)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
-		input_layout.setContentsMargins(30, 20, 30, 20)
+		input_layout.setContentsMargins(30, 0, 30, 0)
 		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_next)
 		btn_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_layout.setContentsMargins(30, 20, 30, 20)
+		btn_layout.setContentsMargins(30, 0, 30, 0)
 		btn_layout.setSpacing(0)
 
 		contents_layout = QtWidgets.QVBoxLayout()
 		contents_layout.addLayout(description_layout)
 		contents_layout.addLayout(input_layout)
+		contents_layout.addSpacing(30)
 		contents_layout.addLayout(btn_layout)
 		contents_layout.addStretch()
 		contents_layout.setAlignment(QtCore.Qt.AlignTop)
 		contents_layout.setContentsMargins(0, 0, 0, 0)
-		contents_layout.setSpacing(0)
+		contents_layout.setSpacing(20)
 
 		# disclaimer_layout = QtWidgets.QVBoxLayout()
 		# disclaimer_layout.addWidget(self.lbl_disclaimer)
@@ -142,7 +175,8 @@ class CreateWorkspace(QtWidgets.QWidget):
 		# disclaimer_layout.setContentsMargins(0, 20, 0, 20)
 		# disclaimer_layout.setSpacing(0)
 
-		self.main_layout = QtWidgets.QVBoxLayout()
+		self.main_layout = QtWidgets.QHBoxLayout()
+		self.main_layout.addLayout(btn_back_layout)
 		self.main_layout.addLayout(contents_layout)
 		# self.main_layout.addLayout(disclaimer_layout)
 		# self.main_layout.setAlignment(QtCore.Qt.AlignBottom)
@@ -154,26 +188,31 @@ class CreateWorkspace(QtWidgets.QWidget):
 		# Connections -----------------------------------
 		self.btn_next.clicked.connect(self._on_next)
 		self.le_workspace.textChanged.connect(self.check_le_state)
+		self.le_mount_point.textChanged.connect(self.check_le_state)
 
 	def check_le_state(self, *args, **kwargs):
 		"""
 		Makes sure line edit input is an email address
 		"""
-		sender = self.sender()
-		validator = sender.validator()
-		state = validator.validate(sender.text(), 0)[0]
-		if state == QtGui.QValidator.Acceptable:
+		# sender = self.sender()
+		validator_mount = self.le_mount_point.validator()
+		state_mount = validator_mount.validate(self.le_mount_point.text(), 0)[0]
+
+		validator_workspace = self.le_workspace.validator()
+		state_workspace = validator_workspace.validate(self.le_workspace.text(), 0)[0]
+
+		if state_workspace == QtGui.QValidator.Acceptable and state_mount == QtGui.QValidator.Acceptable:
 			self.btn_next.setEnabled(True)
-		elif state == QtGui.QValidator.Intermediate:
+		elif state_workspace == QtGui.QValidator.Intermediate and state_mount == QtGui.QValidator.Intermediate:
 			self.btn_next.setEnabled(False)
 		else:
 			self.btn_next.setEnabled(False)
 
 	def update(self):
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		self.tb_welcome.setHtml("""
-					<p style="font-size:30px;">Ahoy, {0}!</p>
-					<p style="font-size:30px;">What kind of work will you be doing?</p>""".format(
+		self.tb_welcome.setText("""
+					<p style="font-size:30px;font-weight: normal;">Ahoy, {0}!</p>
+					<p style="font-size:30px;font-weight: normal;">Lets set up your first workspace</p>""".format(
 			data['CURRENT_USERNAME']))
 
 	def _on_next(self):

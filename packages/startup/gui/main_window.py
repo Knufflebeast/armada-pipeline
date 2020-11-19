@@ -30,7 +30,6 @@ class StartupMainWindow(QtWidgets.QDialog):
 	enter_signal_str = "returnPressed"
 	esc_pressed = QtCore.Signal(str)
 	esc_signal_str = "escPressed"
-	newCreated = QtCore.Signal()
 
 	def __init__(self):
 		"""
@@ -72,12 +71,8 @@ class StartupMainWindow(QtWidgets.QDialog):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.login_flow_widget.loginPressed.connect(self.creation_flow_widget.create_username_widget.update)
+		self.login_flow_widget.loginPressed.connect(self.creation_flow_widget.username_widget.update)
 
 	def _on_login(self):
 		self.sw_main.setCurrentIndex(1)
-
-		# self.create_username_widget.nextPressed.connect(self.create_workspace_widget.update)
-		# self.create_workspace_widget.nextPressed.connect(self.create_project_widget.update)
-		# self.create_project_widget.complete.connect(self.create_project_widget.launch_armada)
 
