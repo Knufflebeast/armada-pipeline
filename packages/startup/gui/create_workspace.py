@@ -61,21 +61,24 @@ class CreateWorkspace(QtWidgets.QWidget):
 			font-weight: normal
 		""")
 		self.tb_description.setText("""
-			<p>A <b>workspace</b> is where all of your work will be stored.
+			<p>A <b>workspace</b> is where all of your projects will be stored.
 			<p>Name it after the company you work for, a series of projects you're starting, or the type of work you'll be doing.</p>
 			<p>You can change the name later, but it's strongly advised that you don't!</p>"""
 		)
 		self.tb_description.setWordWrap(True)
 
 		# Mount point
-		self.lbl_mount_point = QtWidgets.QLabel('What drive should we mount the workspace to?')
+		self.lbl_mount_point = QtWidgets.QLabel('What directory should we mount the workspace to?')
 
 		self.le_mount_point = QtWidgets.QLineEdit()
 		self.le_mount_point.setPlaceholderText('e.g D:/OneDrive/Work')
 		self.le_mount_point.setMinimumHeight(40)
-		regexp = QtCore.QRegExp("^[a-zA-Z0-9_]+$", QtCore.Qt.CaseInsensitive)
+		regexp = QtCore.QRegExp("^[a-zA-Z0-9_/:]+$", QtCore.Qt.CaseInsensitive)
 		validator = QtGui.QRegExpValidator(regexp)
 		self.le_mount_point.setValidator(validator)
+
+		self.btn_mount_browse = QtWidgets.QPushButton("Browse")
+		self.btn_mount_browse.setMinimumWidth(100)
 
 		self.hline_mount_point = QtWidgets.QFrame()
 		self.hline_mount_point.setFixedHeight(1)
@@ -96,6 +99,21 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.hline_workspace.setFixedHeight(1)
 		self.hline_workspace.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 		self.hline_workspace.setStyleSheet("background-color: #636363;")
+
+		# Full path name
+		self.lbl_full_path = QtWidgets.QLabel('Full mount point path')
+
+		self.lbl_path_example = QtWidgets.QLabel()
+		self.lbl_path_example.setWordWrap(True)
+		self.lbl_path_example.setStyleSheet("""
+					background-color: transparent;
+					font: 12px;
+					font-weight: normal"""
+													 )
+		self.hline_full_path = QtWidgets.QFrame()
+		self.hline_full_path.setFixedHeight(1)
+		self.hline_full_path.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		self.hline_full_path.setStyleSheet("background-color: #636363;")
 
 		self.btn_next = QtWidgets.QPushButton('Next')
 		self.btn_next.setStyleSheet('''
@@ -129,45 +147,55 @@ class CreateWorkspace(QtWidgets.QWidget):
 		btn_back_layout = QtWidgets.QVBoxLayout()
 		btn_back_layout.addWidget(self.btn_back)
 		btn_back_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_back_layout.setContentsMargins(30, 20, 0, 20)
+		btn_back_layout.setContentsMargins(0, 0, 0, 0)
 		btn_back_layout.setSpacing(0)
 
 		description_layout = QtWidgets.QVBoxLayout()
 		description_layout.addWidget(self.tb_welcome)
 		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
-		description_layout.setContentsMargins(30, 20, 30, 20)
+		description_layout.setContentsMargins(0, 0, 0, 0)
 		description_layout.setSpacing(30)
 
+		mount_layout = QtWidgets.QHBoxLayout()
+		mount_layout.addWidget(self.le_mount_point)
+		mount_layout.addWidget(self.btn_mount_browse)
+		mount_layout.setContentsMargins(0, 0, 0, 0)
+		mount_layout.setSpacing(0)
+
 		input_layout = QtWidgets.QVBoxLayout()
+		input_layout.addWidget(self.lbl_mount_point)
+		input_layout.addSpacing(10)
+		input_layout.addLayout(mount_layout)
+		input_layout.addWidget(self.hline_mount_point)
+		input_layout.addSpacing(20)
 		input_layout.addWidget(self.lbl_workspace)
 		input_layout.addSpacing(10)
 		input_layout.addWidget(self.le_workspace)
 		input_layout.addWidget(self.hline_workspace)
 		input_layout.addSpacing(20)
-		input_layout.addWidget(self.lbl_mount_point)
+		input_layout.addWidget(self.lbl_full_path)
 		input_layout.addSpacing(10)
-		input_layout.addWidget(self.le_mount_point)
-		input_layout.addWidget(self.hline_mount_point)
+		input_layout.addWidget(self.lbl_path_example)
+		# input_layout.addWidget(self.hline_full_path)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
-		input_layout.setContentsMargins(30, 0, 30, 0)
+		input_layout.setContentsMargins(0, 0, 0, 0)
 		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_next)
 		btn_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_layout.setContentsMargins(30, 0, 30, 0)
+		btn_layout.setContentsMargins(0, 0, 0, 0)
 		btn_layout.setSpacing(0)
 
 		contents_layout = QtWidgets.QVBoxLayout()
 		contents_layout.addLayout(description_layout)
 		contents_layout.addLayout(input_layout)
-		contents_layout.addSpacing(30)
 		contents_layout.addLayout(btn_layout)
 		contents_layout.addStretch()
 		contents_layout.setAlignment(QtCore.Qt.AlignTop)
 		contents_layout.setContentsMargins(0, 0, 0, 0)
-		contents_layout.setSpacing(20)
+		contents_layout.setSpacing(50)
 
 		# disclaimer_layout = QtWidgets.QVBoxLayout()
 		# disclaimer_layout.addWidget(self.lbl_disclaimer)
@@ -180,8 +208,8 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.main_layout.addLayout(contents_layout)
 		# self.main_layout.addLayout(disclaimer_layout)
 		# self.main_layout.setAlignment(QtCore.Qt.AlignBottom)
-		self.main_layout.setContentsMargins(0, 0, 0, 0)
-		self.main_layout.setSpacing(0)
+		self.main_layout.setContentsMargins(20, 20, 60, 20)
+		self.main_layout.setSpacing(10)
 
 		self.setLayout(self.main_layout)
 
@@ -189,6 +217,13 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.btn_next.clicked.connect(self._on_next)
 		self.le_workspace.textChanged.connect(self.check_le_state)
 		self.le_mount_point.textChanged.connect(self.check_le_state)
+		self.btn_mount_browse.clicked.connect(self.on_browse_pressed)
+
+	def on_browse_pressed(self):
+		self.file_dialog = QtWidgets.QFileDialog()
+		self.file_dialog.setFileMode(self.file_dialog.Directory)
+		path = self.file_dialog.getExistingDirectory(self, "Choose mount directory")
+		self.le_mount_point.setText(path)
 
 	def check_le_state(self, *args, **kwargs):
 		"""
@@ -201,12 +236,16 @@ class CreateWorkspace(QtWidgets.QWidget):
 		validator_workspace = self.le_workspace.validator()
 		state_workspace = validator_workspace.validate(self.le_workspace.text(), 0)[0]
 
-		if state_workspace == QtGui.QValidator.Acceptable and state_mount == QtGui.QValidator.Acceptable:
+		# Check validator
+		if state_workspace == QtGui.QValidator.Acceptable and state_mount == QtGui.QValidator.Acceptable and os.path.exists(self.le_mount_point.text()):
 			self.btn_next.setEnabled(True)
 		elif state_workspace == QtGui.QValidator.Intermediate and state_mount == QtGui.QValidator.Intermediate:
 			self.btn_next.setEnabled(False)
 		else:
 			self.btn_next.setEnabled(False)
+
+		# Set exmaple text
+		self.lbl_path_example.setText(os.path.join(self.le_mount_point.text(), self.le_workspace.text()).replace('\\', '/'))
 
 	def update(self):
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
@@ -216,8 +255,11 @@ class CreateWorkspace(QtWidgets.QWidget):
 			data['CURRENT_USERNAME']))
 
 	def _on_next(self):
-		workspace = self.le_workspace.text()
+		# Get full path to workspace
+		workspace = self.lbl_path_example.text()
+		# Save workspace data
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+		os.environ['ARMADA_MOUNT_PREFIX'] = workspace  # should do this all in one place maybe?
 		data['CURRENT_WORKSPACE'] = workspace
 		print(workspace)
 		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)

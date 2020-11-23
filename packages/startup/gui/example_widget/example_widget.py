@@ -1,4 +1,4 @@
-﻿"""
+"""
 Startup main window
 """
 from Qt import QtCore, QtWidgets, QtGui
@@ -11,7 +11,7 @@ import utilsa
 logging = utilsa.Logger('armada')
 
 
-class CreateUsername(QtWidgets.QWidget):
+class ExampleWidget(QtWidgets.QWidget):
 	"""Sets up user and/or shared data depending on type of setup process
 	"""
 
@@ -27,7 +27,7 @@ class CreateUsername(QtWidgets.QWidget):
 		Args:
 			flow: What part of setup is the user entering into?
 		"""
-		super(CreateUsername, self).__init__(parent)
+		super(ExampleWidget, self).__init__(parent)
 
 		self.logger = logging.getLogger('menu.' + self.__class__.__name__)
 		self.logger.info('Workplace creation starting...')
@@ -42,65 +42,14 @@ class CreateUsername(QtWidgets.QWidget):
 		self.sizeHint()
 
 		# GUI ----------------------------------
-		self.btn_back = QtWidgets.QPushButton()
-		self.btn_back.setIcon(resource.color_svg('arrow_left', 128, '#9E9E9E'))
-		self.btn_back.setIconSize(QtCore.QSize(30, 30))
-		self.btn_back.setFixedHeight(30)
-		self.btn_back.setStyleSheet(resource.style_sheet('push_button_w_icon'))
-		self.btn_back.hide()
+		self.user_avatar = label_image.LabelImage('mike.bourbeau', size=30)  # name='mike_photo')
+		self.user_avatar.setObjectName('CurrentUser')
 
-		self.tb_welcome = QtWidgets.QLabel()
-		self.tb_welcome.setText("""
-			<p style="font-size:30px;font-weight: normal;">Welcome aboard!</p>"""
-		)
+		self.lbl_workspace = QtWidgets.QLabel('Knufflebeast')
+		self.lbl_workspace.setStyleSheet("font:12pt;font-weight:bold;")
 
-		self.tb_description = QtWidgets.QLabel()
-		self.tb_description.setStyleSheet("""
-		"font: 12px;font-weight: normal; color: #CFCFCF;
-		""")
-
-		# Input
-		self.lbl_username = QtWidgets.QLabel("What's your full name?")
-
-		self.le_username = QtWidgets.QLineEdit()
-		self.le_username.setMinimumHeight(40)
-		regexp = QtCore.QRegExp("^[a-zA-Z0-9- ]+$", QtCore.Qt.CaseInsensitive)
-		validator = QtGui.QRegExpValidator(regexp)
-		self.le_username.setValidator(validator)
-
-		self.hline_username = QtWidgets.QFrame()
-		self.hline_username.setFixedHeight(1)
-		self.hline_username.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-		self.hline_username.setStyleSheet("background-color: #636363;")
-
-		self.btn_next = QtWidgets.QPushButton('Next')
-		self.btn_next.setFixedWidth(100)
-		self.btn_next.setStyleSheet('''
-			QPushButton{
-				Background:#2e7a78;
-				height: 30px;
-				font: 12px "Roboto-Thin"
-			}
-			QPushButton:hover{
-				Background: #369593;
-			}
-			QPushButton:hover:pressed{
-				Background: #2e7a78;
-			}
-			QPushButton:pressed{
-				Background:  #2a615f;
-			}
-			QPushButton:disabled{
-				Background: #3b3b3b;
-			}'''
-		)
-		self.btn_next.setFixedSize(100, 40)
-		self.btn_next.setEnabled(False)
-
-		# self.lbl_disclaimer = QtWidgets.QTextBrowser()
-		# self.lbl_disclaimer.setReadOnly(True)
-		# self.lbl_disclaimer.setText('Armada Pipeline does not store passwords or account data at this time. Your acocunt is stored locally and only used to add another degree of flexibility project')
-		# self.lbl_disclaimer.setMinimumSize(100, 50)
+		self.lbl_user_name = QtWidgets.QLabel('Mike Bourbeau')
+		self.lbl_user_name.setStyleSheet("font:10pt 'Roboto-Thin'; color: #949494;")
 
 		# Layout --------------------------------------------
 		btn_back_layout = QtWidgets.QVBoxLayout()

@@ -80,8 +80,8 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.workspace_widget = create_workspace.CreateWorkspace(self)
 		self.project_widget = create_project.CreateProject(self)
 		self.structure_workflow_widget = create_structure_workflow.CreateStructureWorkflow(self)
-		# self.structure_selection_widget = create_structure_selection.CreateStructureSelection(self)
-		# self.software_widget = create_software.CreateSoftware(self)
+		self.structure_selection_widget = create_structure_selection.CreateStructureSelection(self)
+		self.software_widget = create_software.CreateSoftware(self)
 
 		# Creation stacked widget. Guides first setup flow
 		self.sw_creation_flows = QtWidgets.QStackedWidget(self)
@@ -90,11 +90,12 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.sw_creation_flows.addWidget(self.workspace_widget)
 		self.sw_creation_flows.addWidget(self.project_widget)
 		self.sw_creation_flows.addWidget(self.structure_workflow_widget)
-		# self.sw_creation_flows.addWidget(self.structure_selection_widget)
-		# self.sw_creation_flows.addWidget(self.software_widget)
+		self.sw_creation_flows.addWidget(self.structure_selection_widget)
+		self.sw_creation_flows.addWidget(self.software_widget)
 
 		self.example_widget = QtWidgets.QWidget()
 		self.example_widget.setMaximumWidth(400)
+		self.example_widget.setObjectName("armada_ExampleWidget")
 
 		# State machine ------------------
 		self.state_machine = QtCore.QStateMachine()
@@ -115,11 +116,11 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# Structure workflow next
 		self.trans_s3_s4 = self.s3_structure_workflow.addTransition(self.structure_workflow_widget.btn_next.clicked, self.s4_structure_sel)
 		# # Structure sel next
-		# self.trans_s4_s5 = self.s4_structure_sel.addTransition(self.structure_sel.btn_left.clicked, self.s5_software)
+		self.trans_s4_s5 = self.s4_structure_sel.addTransition(self.structure_selection_widget.btn_next.clicked, self.s5_software)
 		# # Software back
-		# self.trans_s5_s4 = self.s5_software.addTransition(self.software.btn_back.clicked, self.s4_structure_sel)
-		# # Structure sel back
-		# self.trans_s4_s3 = self.s4_structure_sel.addTransition(self.structure_sel.btn_back.clicked, self.s3_structure_workflow)
+		self.trans_s5_s4 = self.s5_software.addTransition(self.software_widget.btn_back.clicked, self.s4_structure_sel)
+		# Structure sel back
+		self.trans_s4_s3 = self.s4_structure_sel.addTransition(self.structure_selection_widget.btn_back.clicked, self.s3_structure_workflow)
 		# Structure workflow back
 		self.trans_s3_s2 = self.s3_structure_workflow.addTransition(self.structure_workflow_widget.btn_back.clicked, self.s2_project)
 		# Project back
@@ -232,6 +233,8 @@ class CreationFlowWidget(QtWidgets.QWidget):
 
 	def on_s4_structure_sel_entered(self):
 		print('entered structure selection')
+		self.sw_creation_flows.setCurrentIndex(4)
 
 	def on_s5_software_entered(self):
 		print('entered software')
+		self.sw_creation_flows.setCurrentIndex(5)

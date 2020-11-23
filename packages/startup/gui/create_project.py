@@ -59,7 +59,7 @@ class CreateProject(QtWidgets.QWidget):
 
 		self.tb_description = QtWidgets.QLabel()
 		self.tb_description.setText("""
-			<p style="font: 12px;font-weight: normal;">What's something you and your team are currently working on?</p>"""
+			<p style="font: 12px;font-weight: normal;">What's something that you and your team are currently working on?</p>"""
 		)
 
 		self.lbl_project = QtWidgets.QLabel('Project name')
@@ -108,14 +108,14 @@ class CreateProject(QtWidgets.QWidget):
 		btn_back_layout = QtWidgets.QVBoxLayout()
 		btn_back_layout.addWidget(self.btn_back)
 		btn_back_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_back_layout.setContentsMargins(30, 20, 0, 20)
+		btn_back_layout.setContentsMargins(0, 0, 0, 0)
 		btn_back_layout.setSpacing(0)
 
 		description_layout = QtWidgets.QVBoxLayout()
 		description_layout.addWidget(self.tb_welcome)
 		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
-		description_layout.setContentsMargins(30, 20, 30, 20)
+		description_layout.setContentsMargins(0, 0, 0, 0)
 		description_layout.setSpacing(30)
 
 		input_layout = QtWidgets.QVBoxLayout()
@@ -124,13 +124,13 @@ class CreateProject(QtWidgets.QWidget):
 		input_layout.addWidget(self.le_project)
 		input_layout.addWidget(self.hline_project)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
-		input_layout.setContentsMargins(30, 20, 30, 20)
+		input_layout.setContentsMargins(0, 0, 0, 0)
 		input_layout.setSpacing(0)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_next)
 		btn_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_layout.setContentsMargins(30, 20, 30, 20)
+		btn_layout.setContentsMargins(0, 0, 0, 0)
 		btn_layout.setSpacing(0)
 
 		contents_layout = QtWidgets.QVBoxLayout()
@@ -140,7 +140,7 @@ class CreateProject(QtWidgets.QWidget):
 		contents_layout.addStretch()
 		contents_layout.setAlignment(QtCore.Qt.AlignTop)
 		contents_layout.setContentsMargins(0, 0, 0, 0)
-		contents_layout.setSpacing(0)
+		contents_layout.setSpacing(50)
 
 		# disclaimer_layout = QtWidgets.QVBoxLayout()
 		# disclaimer_layout.addWidget(self.lbl_disclaimer)
@@ -153,8 +153,8 @@ class CreateProject(QtWidgets.QWidget):
 		self.main_layout.addLayout(contents_layout)
 		# self.main_layout.addLayout(disclaimer_layout)
 		# self.main_layout.setAlignment(QtCore.Qt.AlignBottom)
-		self.main_layout.setContentsMargins(0, 0, 0, 0)
-		self.main_layout.setSpacing(0)
+		self.main_layout.setContentsMargins(20, 20, 60, 20)
+		self.main_layout.setSpacing(10)
 
 		self.setLayout(self.main_layout)
 

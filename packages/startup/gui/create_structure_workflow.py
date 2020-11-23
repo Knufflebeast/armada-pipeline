@@ -50,7 +50,7 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 
 		self.tb_welcome = QtWidgets.QLabel()
 		self.tb_welcome.setText("""
-			<p style="font-size:30px;font-weight: normal;">How do you want to organize your work?</p>"""
+			<p style="font-size:30px;font-weight: normal;">How should we organize this project?</p>"""
 		)
 		self.tb_welcome.setWordWrap(True)
 
@@ -61,20 +61,59 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 			font-weight: normal"""
 		)
 		self.tb_description.setText("""
-			<p>Armada utilizes a <b>structure</b> system to enforce project-wide folder/file location and naming conventions.  
-			<p>These rules automatically determine what files and folders you can make and where they can be placed - so 
-			you can focus on what you do best: ART!</p>"""
+			<p>Each project utilizes a set of rules called a <b>structure</b> to enforce folder/file locations and naming conventions.
+			<p>Once configured a structure automatically makes sure everyone adheres to the ruleset so you can focus on what you do best: Makin art!</p>"""
 		)
 		self.tb_description.setWordWrap(True)
 
 		# Input
-		self.lbl_username = QtWidgets.QLabel("What's your full name?")
+		self.lbl_structure_workflow = QtWidgets.QLabel("Choose a structure workflow")
 
-		self.le_username = QtWidgets.QLineEdit()
-		self.le_username.setMinimumHeight(40)
-		regexp = QtCore.QRegExp("^[a-zA-Z0-9- ]+$", QtCore.Qt.CaseInsensitive)
-		validator = QtGui.QRegExpValidator(regexp)
-		self.le_username.setValidator(validator)
+		self.lw_items = QtWidgets.QListWidget()
+		self.lw_items.setViewMode(QtWidgets.QListView.IconMode)
+		# self.lw_items.setMaximumHeight(50)
+		# self.lw_items.setResizeMode(QtWidgets.QListView.Fixed)
+		self.lw_items.setUniformItemSizes(True)
+		self.lw_items.setSizeAdjustPolicy(QtWidgets.QListWidget.AdjustIgnored)
+		self.lw_items.setMovement(self.lw_items.Static)
+		self.lw_items.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents);
+		self.lw_items.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding);
+		self.lw_items.setFlow(QtWidgets.QListView.LeftToRight)
+		# self.lw_items.setSpacing(5)
+		self.lw_items.setMinimumHeight(100)
+		self.lw_items.setStyleSheet("""
+				QListView{
+					show-decoration-selected: 0;
+					background: #262626;
+					color:rgb(218,218,218) ;
+					font:12px "Roboto-Thin";
+					border: none;
+					height: 200px;
+					outline: 0;
+					padding-left: 10;
+					padding-right: 10;
+				}
+				""")
+
+		# Structure workflow options
+		builtin_icon = resource.color_svg('folder_folder', 1024, '#F9D085')
+		lw_item = QtWidgets.QListWidgetItem(builtin_icon, 'Built-in Structure')
+		lw_item.setSizeHint(self.lw_items.sizeHint())
+		self.lw_items.addItem(lw_item)
+
+		custom_icon = resource.color_svg('structure_create', 1024, '#7D7D7D')
+		lw_item = QtWidgets.QListWidgetItem(custom_icon, 'Custom Structure')
+		lw_item.setSizeHint(self.lw_items.sizeHint())
+		# lw_item.setFlags(QtCore.Qt.ItemIsSelectable)  # TODO: enable when custom structures workflow is figured out
+		self.lw_items.addItem(lw_item)
+
+		self.lbl_structure_description = QtWidgets.QLabel()
+		self.lbl_structure_description.setWordWrap(True)
+		self.lbl_structure_description.setStyleSheet("""
+			background-color: transparent;
+			font: 12px;
+			font-weight: normal"""
+		)
 
 		self.hline_username = QtWidgets.QFrame()
 		self.hline_username.setFixedHeight(1)
@@ -114,29 +153,28 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 		btn_back_layout = QtWidgets.QVBoxLayout()
 		btn_back_layout.addWidget(self.btn_back)
 		btn_back_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_back_layout.setContentsMargins(30, 20, 0, 20)
+		btn_back_layout.setContentsMargins(0, 0, 0, 0)
 		btn_back_layout.setSpacing(0)
 
 		description_layout = QtWidgets.QVBoxLayout()
 		description_layout.addWidget(self.tb_welcome)
 		description_layout.addWidget(self.tb_description)
 		description_layout.setAlignment(QtCore.Qt.AlignTop)
-		description_layout.setContentsMargins(30, 20, 30, 20)
+		description_layout.setContentsMargins(0, 0, 0, 0)
 		description_layout.setSpacing(30)
 
 		input_layout = QtWidgets.QVBoxLayout()
-		input_layout.addWidget(self.lbl_username)
-		input_layout.addSpacing(10)
-		input_layout.addWidget(self.le_username)
-		input_layout.addWidget(self.hline_username)
+		input_layout.addWidget(self.lbl_structure_workflow)
+		input_layout.addWidget(self.lw_items)
+		input_layout.addWidget(self.lbl_structure_description)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
-		input_layout.setContentsMargins(30, 20, 30, 20)
-		input_layout.setSpacing(0)
+		input_layout.setContentsMargins(0, 0, 0, 0)
+		input_layout.setSpacing(10)
 
 		btn_layout = QtWidgets.QVBoxLayout()
 		btn_layout.addWidget(self.btn_next)
 		btn_layout.setAlignment(QtCore.Qt.AlignTop)
-		btn_layout.setContentsMargins(30, 20, 30, 20)
+		btn_layout.setContentsMargins(0, 0, 0, 0)
 		btn_layout.setSpacing(0)
 
 		contents_layout = QtWidgets.QVBoxLayout()
@@ -146,33 +184,36 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 		contents_layout.addStretch()
 		contents_layout.setAlignment(QtCore.Qt.AlignTop)
 		contents_layout.setContentsMargins(0, 0, 0, 0)
-		contents_layout.setSpacing(0)
+		contents_layout.setSpacing(50)
 
 		self.main_layout = QtWidgets.QHBoxLayout()
 		self.main_layout.addLayout(btn_back_layout)
 		self.main_layout.addLayout(contents_layout)
-		self.main_layout.setContentsMargins(0, 0, 0, 0)
-		self.main_layout.setSpacing(0)
+		self.main_layout.setContentsMargins(20, 20, 60, 20)
+		self.main_layout.setSpacing(10)
 
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_next.clicked.connect(self._on_next)
-		self.le_username.textChanged.connect(self.check_le_state)
+		# self.btn_next.clicked.connect(self._on_next)
+		self.lw_items.itemClicked.connect(self._lw_sel_changed)
 
-	def check_le_state(self, *args, **kwargs):
-		"""
-		Makes sure line edit input is an email address
-		"""
-		sender = self.sender()
-		validator = sender.validator()
-		state = validator.validate(sender.text(), 0)[0]
-		if state == QtGui.QValidator.Acceptable:
-			self.btn_next.setEnabled(True)
-		elif state == QtGui.QValidator.Intermediate:
-			self.btn_next.setEnabled(False)
-		else:
-			self.btn_next.setEnabled(False)
+	def _lw_sel_changed(self, index):
+		# Structure setup
+		if index.data(QtCore.Qt.DisplayRole) == "Built-in Structure":
+			self.lbl_structure_description.setText("""
+			<p>Choose between 2 <b>built-in structures</b>:</p>
+			<li>- Game Development</li> 
+			<li>- Film Production</li>
+			<p><b>[NOTE]</b> Structures cannot be changed at this time without destroying the project. In order to try 
+			a different structure close Armada and the delete the contents of your mount directory. 
+			Reset instructions will be provided in-app and the documentation as well. Future releases will automate
+			this process</p>""")
+			self.btn_next.setDisabled(False)
+
+		elif index.data(QtCore.Qt.DisplayRole) == "Custom Structure":
+			self.lbl_structure_description.setText("""[IN DEVELOPMENT] Create your own <b>custom structure</b>.""")
+			self.btn_next.setDisabled(True)
 
 	def update(self):
 		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
@@ -182,11 +223,11 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 					<p style="font: 12px;font-weight: normal; color: #CFCFCF;">You're signed in as {0}.</p>""".format(
 			data['CURRENT_ACCOUNT']))
 
-	def _on_next(self):
-		username = self.le_username.text()
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		data['CURRENT_USERNAME'] = username
-		print(username)
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
-
-		self.nextPressed.emit()
+	# def _on_next(self):
+	# 	username = self.le_username.text()
+	# 	data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+	# 	data['CURRENT_USERNAME'] = username
+	# 	print(username)
+	# 	resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
+	#
+	# 	self.nextPressed.emit()
