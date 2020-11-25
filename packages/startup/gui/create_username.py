@@ -149,7 +149,7 @@ class CreateUsername(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_next.clicked.connect(self._on_next)
+		# self.btn_next.clicked.connect(self._on_next)
 		self.le_username.textChanged.connect(self.check_le_state)
 
 	def check_le_state(self, *args, **kwargs):
@@ -166,19 +166,7 @@ class CreateUsername(QtWidgets.QWidget):
 		else:
 			self.btn_next.setEnabled(False)
 
-	def update(self):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		print('getting update data user')
-		print(data['CURRENT_ACCOUNT'])
+	def update_gui(self, account_name):
 		self.tb_description.setText("""
 					<p style="font: 12px;font-weight: normal; color: #CFCFCF;">You're signed in as {0}.</p>""".format(
-			data['CURRENT_ACCOUNT']))
-
-	def _on_next(self):
-		username = self.le_username.text()
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		data['CURRENT_USERNAME'] = username
-		print(username)
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
-
-		self.nextPressed.emit()
+			account_name))

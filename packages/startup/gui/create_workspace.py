@@ -68,7 +68,7 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.tb_description.setWordWrap(True)
 
 		# Mount point
-		self.lbl_mount_point = QtWidgets.QLabel('What directory should we mount the workspace to?')
+		self.lbl_mount_point = QtWidgets.QLabel('Choose an empty directory to mount your workspace to')
 
 		self.le_mount_point = QtWidgets.QLineEdit()
 		self.le_mount_point.setPlaceholderText('e.g D:/OneDrive/Work')
@@ -86,7 +86,7 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.hline_mount_point.setStyleSheet("background-color: #636363;")
 
 		# Workspace name
-		self.lbl_workspace = QtWidgets.QLabel('Workspace name')
+		self.lbl_workspace = QtWidgets.QLabel('What should we call this workspace?')
 
 		self.le_workspace = QtWidgets.QLineEdit()
 		self.le_workspace.setPlaceholderText('e.g. Knufflebeast, Junior Year Projects, Solo Show, Research and Development, etc.')
@@ -100,20 +100,20 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.hline_workspace.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 		self.hline_workspace.setStyleSheet("background-color: #636363;")
 
-		# Full path name
-		self.lbl_full_path = QtWidgets.QLabel('Full mount point path')
-
-		self.lbl_path_example = QtWidgets.QLabel()
-		self.lbl_path_example.setWordWrap(True)
-		self.lbl_path_example.setStyleSheet("""
-					background-color: transparent;
-					font: 12px;
-					font-weight: normal"""
-													 )
-		self.hline_full_path = QtWidgets.QFrame()
-		self.hline_full_path.setFixedHeight(1)
-		self.hline_full_path.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-		self.hline_full_path.setStyleSheet("background-color: #636363;")
+		# # Full path name
+		# self.lbl_full_path = QtWidgets.QLabel('Full mount point path')
+		#
+		# self.lbl_path_example = QtWidgets.QLabel()
+		# self.lbl_path_example.setWordWrap(True)
+		# self.lbl_path_example.setStyleSheet("""
+		# 			background-color: transparent;
+		# 			font: 12px;
+		# 			font-weight: normal"""
+		# 											 )
+		# self.hline_full_path = QtWidgets.QFrame()
+		# self.hline_full_path.setFixedHeight(1)
+		# self.hline_full_path.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+		# self.hline_full_path.setStyleSheet("background-color: #636363;")
 
 		self.btn_next = QtWidgets.QPushButton('Next')
 		self.btn_next.setStyleSheet('''
@@ -173,11 +173,10 @@ class CreateWorkspace(QtWidgets.QWidget):
 		input_layout.addSpacing(10)
 		input_layout.addWidget(self.le_workspace)
 		input_layout.addWidget(self.hline_workspace)
-		input_layout.addSpacing(20)
-		input_layout.addWidget(self.lbl_full_path)
-		input_layout.addSpacing(10)
-		input_layout.addWidget(self.lbl_path_example)
-		# input_layout.addWidget(self.hline_full_path)
+		# input_layout.addSpacing(20)
+		# input_layout.addWidget(self.lbl_full_path)
+		# input_layout.addSpacing(10)
+		# input_layout.addWidget(self.lbl_path_example)
 		input_layout.setAlignment(QtCore.Qt.AlignTop)
 		input_layout.setContentsMargins(0, 0, 0, 0)
 		input_layout.setSpacing(0)
@@ -214,7 +213,6 @@ class CreateWorkspace(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_next.clicked.connect(self._on_next)
 		self.le_workspace.textChanged.connect(self.check_le_state)
 		self.le_mount_point.textChanged.connect(self.check_le_state)
 		self.btn_mount_browse.clicked.connect(self.on_browse_pressed)
@@ -245,23 +243,27 @@ class CreateWorkspace(QtWidgets.QWidget):
 			self.btn_next.setEnabled(False)
 
 		# Set exmaple text
-		self.lbl_path_example.setText(os.path.join(self.le_mount_point.text(), self.le_workspace.text()).replace('\\', '/'))
+		# self.lbl_path_example.setText(os.path.join(self.le_mount_point.text(), self.le_workspace.text()).replace('\\', '/'))
 
-	def update(self):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+	def update_gui(self, username):
+		first_name = username.split(' ')[0]
 		self.tb_welcome.setText("""
 					<p style="font-size:30px;font-weight: normal;">Ahoy, {0}!</p>
 					<p style="font-size:30px;font-weight: normal;">Lets set up your first workspace</p>""".format(
-			data['CURRENT_USERNAME']))
+			first_name
+		))
 
-	def _on_next(self):
-		# Get full path to workspace
-		workspace = self.lbl_path_example.text()
+	# def _on_next(self):
 		# Save workspace data
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		os.environ['ARMADA_MOUNT_PREFIX'] = workspace  # should do this all in one place maybe?
-		data['CURRENT_WORKSPACE'] = workspace
-		print(workspace)
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
+		# data = resource.json_read(definitions.CONFIG_DIR, filename=self.le_workspace.text())
+		# data = {
+		# 	'env_vars': {
+		# 		'ARMADA_MOUNT_PREFIX': self.lbl_full_path.text()
+		# 	}
+		# }
+		# # Set env_var mount prefix to mount path
+		# os.environ['ARMADA_MOUNT_PREFIX'] = self.lbl_full_path.text()  # should do this all in one place maybe?
+		# resource.json_save(definitions.CONFIG_DIR, filename=self.le_workspace.text(), data=data)
 
-		self.nextPressed.emit()
+		# data['CURRENT_WORKSPACE'] = self.le_workspace.text()
+		# resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)

@@ -30,12 +30,15 @@ def launch_armada():
 	app = QtWidgets.QApplication(sys.argv)
 	QtGui.QFontDatabase.addApplicationFont("../../resources/fonts/Roboto/Roboto-Thin.ttf")
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
-
+	path = definitions.USER_PATH
 	# Check for existing user or workspace
-	data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+	if os.path.exists(definitions.USER_PATH):
+		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
 
-	window = main_window.StartupMainWindow()
-	window.show()
+	# No account data exists, initial setup required
+	else:
+		window = main_window.StartupMainWindow()
+		window.show()
 
 	# if data['CURRENT_USER'] is "":
 	# 	print('need user')

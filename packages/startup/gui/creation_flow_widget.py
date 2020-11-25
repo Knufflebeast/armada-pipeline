@@ -34,7 +34,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 	enter_signal_str = "returnPressed"
 	esc_pressed = QtCore.Signal(str)
 	esc_signal_str = "escPressed"
-	newCreated = QtCore.Signal()
+	setup_completed = QtCore.Signal()
 
 	def __init__(self, parent=None):
 		"""
@@ -105,6 +105,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.s3_structure_workflow = QtCore.QState()
 		self.s4_structure_sel = QtCore.QState()
 		self.s5_software = QtCore.QState()
+		self.s6_complete = QtCore.QState()
 
 		# Transitions
 		# User next
@@ -115,9 +116,11 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.trans_s2_s3 = self.s2_project.addTransition(self.project_widget.btn_next.clicked, self.s3_structure_workflow)
 		# Structure workflow next
 		self.trans_s3_s4 = self.s3_structure_workflow.addTransition(self.structure_workflow_widget.btn_next.clicked, self.s4_structure_sel)
-		# # Structure sel next
+		# Structure sel next
 		self.trans_s4_s5 = self.s4_structure_sel.addTransition(self.structure_selection_widget.btn_next.clicked, self.s5_software)
-		# # Software back
+		# Complete
+		self.trans_s5_s6 = self.s5_software.addTransition(self.software_widget.btn_next.clicked, self.s6_complete)
+		# Software back
 		self.trans_s5_s4 = self.s5_software.addTransition(self.software_widget.btn_back.clicked, self.s4_structure_sel)
 		# Structure sel back
 		self.trans_s4_s3 = self.s4_structure_sel.addTransition(self.structure_selection_widget.btn_back.clicked, self.s3_structure_workflow)
@@ -135,6 +138,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.state_machine.addState(self.s3_structure_workflow)
 		self.state_machine.addState(self.s4_structure_sel)
 		self.state_machine.addState(self.s5_software)
+		self.state_machine.addState(self.s6_complete)
 		self.state_machine.setInitialState(self.s0_username)
 
 		# Connections
@@ -144,6 +148,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.s3_structure_workflow.entered.connect(self.on_s3_structure_workflow_entered)
 		self.s4_structure_sel.entered.connect(self.on_s4_structure_sel_entered)
 		self.s5_software.entered.connect(self.on_s5_software_entered)
+		self.s6_complete.entered.connect(self.on_s6_complete)
 
 		self.state_machine.start()
 
@@ -220,7 +225,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		print('entered workspace')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
 		self.sw_creation_flows.setCurrentIndex(1)
-		self.workspace_widget.update()
+		self.workspace_widget.update_gui(self.username_widget.le_username.text())
 
 	def on_s2_project_entered(self):
 		print('entered project')
@@ -238,3 +243,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 	def on_s5_software_entered(self):
 		print('entered software')
 		self.sw_creation_flows.setCurrentIndex(5)
+
+	def on_s6_complete(self):
+		print('write data signal on completion')
+		self.setup_completed.emit()

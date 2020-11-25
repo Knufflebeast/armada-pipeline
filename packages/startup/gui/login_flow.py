@@ -4,6 +4,7 @@ Startup main window
 import os
 import platform
 from distutils.dir_util import copy_tree
+import uuid
 
 from Qt import QtCore, QtWidgets, QtGui
 
@@ -252,11 +253,25 @@ class LoginFlow(QtWidgets.QDialog):
 		self.parent.sw_main.setCurrentIndex(1)
 
 	def _on_log_in(self):
-		username = self.le_email.text()
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		data['CURRENT_ACCOUNT'] = username
-		print(username)
+		account_name = self.le_email.text()
+		account_uuid = str(uuid.uuid4())
+
+		data = {
+			'accounts': {
+				account_name: {  # This should be uuid
+					'account_uuid': account_uuid,  # this should be removed
+					'account_name': account_name  # this should hold whatever the google signin value is
+				}
+			},
+			'settings': {
+				'ARMADA_CURRENT_ACCOUNT': account_name
+			}
+		}
+		print(account_name)
+		print(definitions.USER_PATH)
+
+		# Write data and set env vars
 		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
+		os.environ['ARMADA_CURRENT_ACCOUNT'] = account_name
 
 		self.loginPressed.emit()
-		self.parent.sw_main.setCurrentIndex(1)

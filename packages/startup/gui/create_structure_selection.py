@@ -199,7 +199,6 @@ class CreateStructureSelection(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_next.clicked.connect(self._on_next)
 		self.lw_items.itemClicked.connect(self._lw_sel_changed)
 
 	def _lw_sel_changed(self, index):
@@ -218,35 +217,4 @@ class CreateStructureSelection(QtWidgets.QWidget):
 			# self.lbl_helper_image.setPixmap(image)
 			# self.lbl_helper_image.show()
 
-	def update(self):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		print('getting update data user')
-		print(data['CURRENT_ACCOUNT'])
-		self.tb_description.setText("""
-					<p style="font: 12px;font-weight: normal; color: #CFCFCF;">You're signed in as {0}.</p>""".format(
-			data['CURRENT_ACCOUNT']))
 
-	def _on_next(self):
-		# write structure data
-		try:
-			structure_sel_data = self.lw_items.currentIndex().data(QtCore.Qt.UserRole).lower()
-			self.logger.info('Selected structure = {}'.format(structure_sel_data))
-		except AttributeError:
-			raise AttributeError('No type selected, please select one')
-
-		structure_settings_data = {"structure_name": structure_sel_data}
-		shared_settings_path = resource.data_path(data_type='shared')
-		resource.json_save(shared_settings_path, filename='shared_settings', data=structure_settings_data)
-
-		# Make directories in shared location
-		structures_data_root_path = resource.data_path('structures', data_type='shared')
-		path_maker.make_dirs(structures_data_root_path)
-
-		# Copy default structures to shared location
-		shared_settings_data = resource.json_read(resource.data_path(data_type='shared'), filename='shared_settings')
-		default_structure_path = resource.get('resources', 'structures', shared_settings_data['structure_name'])
-		pipeline_structures_data_path = resource.data_path('structures', shared_settings_data['structure_name'],
-														   data_type='shared')
-		copy_tree(default_structure_path, pipeline_structures_data_path)
-
-		self.nextPressed.emit()

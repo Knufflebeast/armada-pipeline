@@ -97,7 +97,7 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 
 		# Structure workflow options
 		builtin_icon = resource.color_svg('folder_folder', 1024, '#F9D085')
-		lw_item = QtWidgets.QListWidgetItem(builtin_icon, 'Built-in Structure')
+		lw_item = QtWidgets.QListWidgetItem(builtin_icon, 'Built In Structure')
 		lw_item.setSizeHint(self.lw_items.sizeHint())
 		self.lw_items.addItem(lw_item)
 
@@ -200,28 +200,20 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 
 	def _lw_sel_changed(self, index):
 		# Structure setup
-		if index.data(QtCore.Qt.DisplayRole) == "Built-in Structure":
+		if index.data(QtCore.Qt.DisplayRole) == "Built In Structure":
 			self.lbl_structure_description.setText("""
-			<p>Choose between 2 <b>built-in structures</b>:</p>
+			<p><b>Built in structures:</b></p>
 			<li>- Game Development</li> 
 			<li>- Film Production</li>
-			<p><b>[NOTE]</b> Structures cannot be changed at this time without destroying the project. In order to try 
-			a different structure close Armada and the delete the contents of your mount directory. 
-			Reset instructions will be provided in-app and the documentation as well. Future releases will automate
-			this process</p>""")
+			<p><b>[NOTE]</b> Structures cannot be changed at this time without destroying the project's data. To 
+			try a different structure please create another project.</p>""")
 			self.btn_next.setDisabled(False)
 
 		elif index.data(QtCore.Qt.DisplayRole) == "Custom Structure":
 			self.lbl_structure_description.setText("""[IN DEVELOPMENT] Create your own <b>custom structure</b>.""")
 			self.btn_next.setDisabled(True)
 
-	def update(self):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		print('getting update data user')
-		print(data['CURRENT_ACCOUNT'])
-		self.tb_description.setText("""
-					<p style="font: 12px;font-weight: normal; color: #CFCFCF;">You're signed in as {0}.</p>""".format(
-			data['CURRENT_ACCOUNT']))
+
 
 	# def _on_next(self):
 	# 	username = self.le_username.text()

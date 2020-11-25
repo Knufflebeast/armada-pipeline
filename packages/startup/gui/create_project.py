@@ -159,7 +159,7 @@ class CreateProject(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		self.btn_next.clicked.connect(self._on_next)
+		# self.btn_next.clicked.connect(self._on_next)
 		self.le_project.textChanged.connect(self.check_le_state)
 
 	def check_le_state(self, *args, **kwargs):
@@ -176,11 +176,11 @@ class CreateProject(QtWidgets.QWidget):
 		else:
 			self.btn_next.setEnabled(False)
 
-	def _on_next(self):
-		project = self.le_project.text()
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		data['CURRENT_PROJECT'] = project
-		print(project)
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
-
-		self.complete.emit()
+	# def _on_next(self):
+		# project = self.le_project.text()
+		# data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+		# data['CURRENT_PROJECT'] = project
+		# print(project)
+		# resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
+		#
+		# self.complete.emit()
