@@ -5,7 +5,8 @@ from Qt import QtWidgets, QtGui
 
 from core import definitions
 from core import resource
-from startup.gui import main_window
+from launcher.gui import main_window as launcher_main_window
+from startup.gui import main_window as startup_main_window
 
 import utilsa
 logging = utilsa.Logger('armada')
@@ -30,33 +31,17 @@ def launch_armada():
 	app = QtWidgets.QApplication(sys.argv)
 	QtGui.QFontDatabase.addApplicationFont("../../resources/fonts/Roboto/Roboto-Thin.ttf")
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
-	path = definitions.USER_PATH
-	# Check for existing user or workspace
-	if os.path.exists(definitions.USER_PATH):
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
 
-	# No account data exists, initial setup required
-	else:
-		window = main_window.StartupMainWindow()
+	# If no account data exists, initial setup required
+	if not os.path.exists(definitions.USER_PATH):
+		# Start setup
+		window = startup_main_window.StartupMainWindow()
 		window.show()
 
-	# if data['CURRENT_USER'] is "":
-	# 	print('need user')
-	# 	window = log_in.LogIn()
-	# 	window.show()
-	# else:
-	# 	print('have user')
-	# 	pass
 
-	# if data['CURRENT_WORKSPACE'] is "":
-	# 	print('need workspace')
-	# 	window = create_workspace.CreateWorkspace()
-	# 	window.show()
-	# else:
-	# 	print('have workspace')
-	# 	window = launcher_main_window.MainWindow()
-	# 	window.show()
-	# 	print('starting launcher')
+	window = launcher_main_window.MainWindow()
+	window.show()
+	print('starting launcher')
 
 	sys.exit(app.exec_())
 

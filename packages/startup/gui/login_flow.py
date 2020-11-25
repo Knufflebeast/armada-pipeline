@@ -255,23 +255,7 @@ class LoginFlow(QtWidgets.QDialog):
 	def _on_log_in(self):
 		account_name = self.le_email.text()
 		account_uuid = str(uuid.uuid4())
-
-		data = {
-			'accounts': {
-				account_name: {  # This should be uuid
-					'account_uuid': account_uuid,  # this should be removed
-					'account_name': account_name  # this should hold whatever the google signin value is
-				}
-			},
-			'settings': {
-				'ARMADA_CURRENT_ACCOUNT': account_name
-			}
-		}
-		print(account_name)
-		print(definitions.USER_PATH)
-
-		# Write data and set env vars
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
 		os.environ['ARMADA_CURRENT_ACCOUNT'] = account_name
+		os.environ['ARMADA_SETUP_ACCOUNT_UUID'] = account_uuid
 
 		self.loginPressed.emit()

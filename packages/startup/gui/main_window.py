@@ -71,6 +71,9 @@ class StartupMainWindow(QtWidgets.QDialog):
 
 		self.setLayout(self.main_layout)
 
+		# # Wait for user input
+		# self.exec_()
+
 		# Connections -----------------------------------
 		self.login_flow_widget.loginPressed.connect(self._on_login_pressed)
 		self.creation_flow_widget.setup_completed.connect(self._on_setup_completed)
@@ -81,6 +84,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 
 	def _on_setup_completed(self):
 		account_name = os.getenv('ARMADA_CURRENT_ACCOUNT')
+		account_uuid = os.getenv('ARMADA_SETUP_ACCOUNT_UUID')
 		username = self.creation_flow_widget.username_widget.le_username.text()
 		workspace_name = self.creation_flow_widget.workspace_widget.le_workspace.text()
 		workspace_mount = self.creation_flow_widget.workspace_widget.le_mount_point.text()
@@ -88,16 +92,28 @@ class StartupMainWindow(QtWidgets.QDialog):
 		blender_location = os.getenv('ARMADA_BLENDER_LOCATION')
 		houdini_location = os.getenv('ARMADA_HOUDINI_LOCATION')
 
-		# Get workspace config data
-		armada_settings = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-
 		# Set env_var mount prefix to mount path
-		armada_settings['accounts'][account_name].update({'username': username})
-		armada_settings['settings'].update({'ARMADA_CURRENT_WORKSPACE': workspace_name})
-		armada_settings['settings'].update({'ARMADA_MAYA_LOCATION': maya_location})
-		armada_settings['settings'].update({'ARMADA_BLENDER_LOCATION': blender_location})
-		armada_settings['settings'].update({'ARMADA_HOUDINI_LOCATION': houdini_location})
-		armada_settings['workspaces'] = {workspace_name: {'ARMADA_MOUNT_PREFIX': workspace_mount}}
+		armada_settings = {
+			'accounts': {
+				account_name: {  # This should be uuid
+					'account_uuid': account_uuid,  # this should be removed
+					'account_name': account_name,  # this should hold whatever the google signin value is
+					'username': username
+				}
+			},
+			'settings': {
+				'ARMADA_CURRENT_ACCOUNT': account_name,
+				'ARMADA_CURRENT_WORKSPACE': workspace_name,
+				'ARMADA_MAYA_LOCATION': maya_location,
+				'ARMADA_BLENDER_LOCATION': blender_location,
+				'ARMADA_HOUDINI_LOCATION': houdini_location
+			},
+			'workspaces': {
+				workspace_name: {
+					'ARMADA_MOUNT_PREFIX': workspace_mount
+				}
+			}
+		}
 
 		# Set env vars
 		os.environ['ARMADA_MOUNT_PREFIX'] = workspace_mount
@@ -147,4 +163,6 @@ class StartupMainWindow(QtWidgets.QDialog):
 		path_maker.make_data_file(data_root_path, 'Projects', json_data=json_data)
 		path_maker.make_uuid_file(data_root_path, 'Projects', uuid='000')
 
-		print('heyeyroere we done')
+		self.close()
+
+		print('hey we done')
