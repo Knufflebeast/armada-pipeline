@@ -2,99 +2,86 @@
 	"$id": "gaming_short_structure",
 	"icon": "folder_game",
 	"hierarchy": {
-		"pipeline_root": {
-			"template_id": "pipeline_root",
+		"workspace": {
+			"template_id": "workspace",
 			"category": "folder",
 			"template": "root",
-			"icon": "folder_pipeline_root",
+			"icon": "folder_workspace",
 			"data": {
 				"meta_data": {"$ref": ["definitions", "meta_data"]},
 				"ext_data": {"$ref": ["definitions", "ext_data"]
 				}
 			},
 			"children": {
-				"client": {
-					"template_id": "client",
+				"project": {
+					"template_id": "project",
 					"category": "folder",
 					"template": "root",
-					"icon": "folder_client",
+					"icon": "folder_project",
 					"data": {
 						"meta_data": {"$ref": ["definitions", "meta_data"]},
-						"ext_data": {"$ref": ["definitions", "ext_data"]
-						}
+						"ext_data": {"$ref": ["definitions","ext_data"]}
 					},
 					"children": {
-						"project": {
-							"template_id": "project",
-							"category": "folder",
-							"template": "root",
-							"icon": "folder_project",
+						"asset_library": {
+							"template_id": "asset_library",
+							"category": "sub_folder",
+							"template": "asset",
+							"icon": "folder_folder",
 							"data": {
 								"meta_data": {"$ref": ["definitions", "meta_data"]},
 								"ext_data": {"$ref": ["definitions","ext_data"]}
 							},
 							"children": {
-								"asset_library": {
-									"template_id": "asset_library",
-									"category": "sub_folder",
+								"asset_type": {
+									"template_id": "asset_type",
+									"category": "folder",
 									"template": "asset",
-									"icon": "folder_folder",
+									"icon": "folder_asset_type",
 									"data": {
 										"meta_data": {"$ref": ["definitions", "meta_data"]},
 										"ext_data": {"$ref": ["definitions","ext_data"]}
 									},
 									"children": {
-										"asset_type": {
-											"template_id": "asset_type",
+										"asset": {
+											"template_id": "asset",
 											"category": "folder",
 											"template": "asset",
-											"icon": "folder_asset_type",
+											"icon": "folder_asset",
 											"data": {
-												"meta_data": {"$ref": ["definitions", "meta_data"]},
+												"meta_data": {"$ref": ["definitions","meta_data"]},
 												"ext_data": {"$ref": ["definitions","ext_data"]}
 											},
 											"children": {
-												"asset": {
-													"template_id": "asset",
+												"asset_task": {
+													"template_id": "task",
 													"category": "folder",
 													"template": "asset",
-													"icon": "folder_asset",
+													"icon": "folder_task",
 													"data": {
 														"meta_data": {"$ref": ["definitions","meta_data"]},
 														"ext_data": {"$ref": ["definitions","ext_data"]}
 													},
 													"children": {
-														"asset_task": {
-															"template_id": "task",
-															"category": "folder",
+														"asset_major_component": {
+															"template_id": "major_component",
+															"category": "file",
 															"template": "asset",
-															"icon": "folder_task",
+															"icon": "folder_major_component",
 															"data": {
 																"meta_data": {"$ref": ["definitions","meta_data"]},
-																"ext_data": {"$ref": ["definitions","ext_data"]}
+																"ext_data": {"$ref": ["definitions","ext_data"]},
+																"type_data": {"$ref": ["definitions","type_data_major"]}
 															},
 															"children": {
-																"asset_major_component": {
-																	"template_id": "major_component",
-																	"category": "file",
+																"asset_minor_component": {
+																	"template_id": "minor_component",
+																	"category": "version",
 																	"template": "asset",
-																	"icon": "folder_major_component",
+																	"icon": "software",
 																	"data": {
 																		"meta_data": {"$ref": ["definitions","meta_data"]},
-																		"ext_data": {"$ref": ["definitions","ext_data"]},
-																		"type_data": {"$ref": ["definitions","type_data_major"]}
-																	},
-																	"children": {
-																		"asset_minor_component": {
-																			"template_id": "minor_component",
-																			"category": "version",
-																			"template": "asset",
-																			"icon": "software",
-																			"data": {
-																				"meta_data": {"$ref": ["definitions","meta_data"]},
-																				"type_data": {"$ref": ["definitions","type_data_minor"]}
-																			}
-																		}
+																		"type_data": {"$ref": ["definitions","type_data_minor"]}
 																	}
 																}
 															}
@@ -104,58 +91,58 @@
 											}
 										}
 									}
-								},
-								"levels": {
-									"template_id": "levels",
-									"category": "sub_folder",
-									"template" : "shot",
-									"icon": "folder_folder",
+								}
+							}
+						},
+						"levels": {
+							"template_id": "levels",
+							"category": "sub_folder",
+							"template" : "shot",
+							"icon": "folder_folder",
+							"data": {
+								"meta_data": {"$ref": ["definitions", "meta_data"]},
+								"ext_data": {"$ref": ["definitions","ext_data"]}
+							},
+							"children": {
+								"level": {
+									"template_id": "level",
+									"category": "folder",
+									"template" : "level",
+									"icon": "folder_level",
 									"data": {
 										"meta_data": {"$ref": ["definitions", "meta_data"]},
 										"ext_data": {"$ref": ["definitions","ext_data"]}
 									},
 									"children": {
-										"level": {
-											"template_id": "level",
+										"level_task": {
+											"template_id": "task",
 											"category": "folder",
 											"template" : "level",
-											"icon": "folder_level",
+											"icon": "folder_task",
 											"data": {
-												"meta_data": {"$ref": ["definitions", "meta_data"]},
+												"meta_data": {"$ref": ["definitions","meta_data"]},
 												"ext_data": {"$ref": ["definitions","ext_data"]}
 											},
 											"children": {
-												"level_task": {
-													"template_id": "task",
-													"category": "folder",
+												"level_major_component": {
+													"template_id": "major_component",
+													"category": "file",
 													"template" : "level",
-													"icon": "folder_task",
+													"icon": "folder_major_component",
 													"data": {
 														"meta_data": {"$ref": ["definitions","meta_data"]},
-														"ext_data": {"$ref": ["definitions","ext_data"]}
+														"ext_data": {"$ref": ["definitions","ext_data"]},
+														"type_data": {"$ref": ["definitions","type_data_major"]}
 													},
 													"children": {
-														"level_major_component": {
-															"template_id": "major_component",
-															"category": "file",
+														"level_minor_component": {
+															"template_id": "minor_component",
+															"category": "version",
 															"template" : "level",
-															"icon": "folder_major_component",
+															"icon": "software",
 															"data": {
 																"meta_data": {"$ref": ["definitions","meta_data"]},
-																"ext_data": {"$ref": ["definitions","ext_data"]},
-																"type_data": {"$ref": ["definitions","type_data_major"]}
-															},
-															"children": {
-																"level_minor_component": {
-																	"template_id": "minor_component",
-																	"category": "version",
-																	"template" : "level",
-																	"icon": "software",
-																	"data": {
-																		"meta_data": {"$ref": ["definitions","meta_data"]},
-																		"type_data": {"$ref": ["definitions","type_data_minor"]}
-																	}
-																}
+																"type_data": {"$ref": ["definitions","type_data_minor"]}
 															}
 														}
 													}

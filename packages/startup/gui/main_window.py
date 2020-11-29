@@ -106,6 +106,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 			'settings': {
 				'ARMADA_CURRENT_ACCOUNT': account_name,
 				'ARMADA_CURRENT_WORKSPACE': workspace_name,
+				'ARMADA_CURRENT_PROJECT': project_name,
 				'ARMADA_MAYA_LOCATION': maya_location,
 				'ARMADA_BLENDER_LOCATION': blender_location,
 				'ARMADA_HOUDINI_LOCATION': houdini_location
@@ -149,24 +150,24 @@ class StartupMainWindow(QtWidgets.QDialog):
 		# File data creation
 		data_root_path = resource.data_path()
 
-		json_data = structure.get_type_data('pipeline_root', type_data=structure.DATA)
+		json_data = structure.get_type_data('workspace', type_data=structure.DATA)
 
 		self.logger.debug('Data structure: {}'.format(structure.get_id()))
 
-		json_data['meta_data']['item_name'] = 'Projects'
-		json_data['meta_data']['item_type'] = 'pipeline_root'
+		json_data['meta_data']['item_name'] = workspace_name
+		json_data['meta_data']['item_type'] = 'workspace'
 		json_data['meta_data']['uuid'] = '000'
 		json_data['meta_data']['hidden'] = 'False'
 		json_data['meta_data']['locked'] = 'True'
-		json_data['meta_data']['template_id'] = 'pipeline_root'
+		json_data['meta_data']['template_id'] = 'workspace'
 
-		path_maker.make_dirs(data_root_path, 'Projects')
-		path_maker.make_data_file(data_root_path, 'Projects', json_data=json_data)
-		path_maker.make_uuid_file(data_root_path, 'Projects', uuid='000')
+		path_maker.make_dirs(data_root_path, workspace_name)
+		path_maker.make_data_file(data_root_path, workspace_name, json_data=json_data)
+		path_maker.make_uuid_file(data_root_path, workspace_name, uuid='000')
 
 		# Project creation
-		user_path = os.path.join(workspace_mount, 'Projects', project_name)
-		data_path = os.path.join(data_root_path, 'Projects', project_name)
+		user_path = os.path.join(workspace_mount, workspace_name, project_name)
+		data_path = os.path.join(data_root_path, workspace_name, project_name)
 		project_uuid = str(uuid.uuid4())
 
 		json_data = structure.get_type_data('project', type_data=structure.DATA)
@@ -189,7 +190,6 @@ class StartupMainWindow(QtWidgets.QDialog):
 		path_maker.make_data_file(data_path_abs, json_data=json_data)
 		# Make uuid file
 		path_maker.make_uuid_file(data_path_abs, uuid=project_uuid)
-
 
 		self.close()
 
