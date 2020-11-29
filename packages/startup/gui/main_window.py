@@ -10,6 +10,7 @@ from Qt import QtCore, QtWidgets, QtGui
 
 from core import definitions
 from core import resource
+from core import resolver
 from core import path_maker
 from core import structure
 from startup.gui import login_flow
@@ -88,6 +89,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 		username = self.creation_flow_widget.username_widget.le_username.text()
 		workspace_name = self.creation_flow_widget.workspace_widget.le_workspace.text()
 		workspace_mount = self.creation_flow_widget.workspace_widget.le_mount_point.text()
+		project_name = self.creation_flow_widget.project_widget.le_project.text()
 		maya_location = os.getenv('ARMADA_MAYA_LOCATION')
 		blender_location = os.getenv('ARMADA_BLENDER_LOCATION')
 		houdini_location = os.getenv('ARMADA_HOUDINI_LOCATION')
@@ -115,10 +117,15 @@ class StartupMainWindow(QtWidgets.QDialog):
 			}
 		}
 
-		# Set env vars
+		# Set env vars for other modules
 		os.environ['ARMADA_MOUNT_PREFIX'] = workspace_mount
+		os.environ['ARMADA_CURRENT_ACCOUNT'] = account_name
+		os.environ['ARMADA_CURRENT_USERNAME'] = username
 
-		# write structure data
+		# Save settings data
+		resource.json_save(definitions.USER_PATH, filename='global_local_settings', data=armada_settings)
+
+		# Write structure data
 		try:
 			structure_sel_data = self.creation_flow_widget.structure_selection_widget.lw_items.currentIndex().data(QtCore.Qt.UserRole).lower()
 			self.logger.info('Selected structure = {}'.format(structure_sel_data))
@@ -139,15 +146,9 @@ class StartupMainWindow(QtWidgets.QDialog):
 		pipeline_structures_data_path = resource.data_path('structures', shared_settings_data['structure_name'], data_type='shared')
 		copy_tree(default_structure_path, pipeline_structures_data_path)
 
-		# Save settings data
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=armada_settings)
-
-		# Project creation
+		# File data creation
 		data_root_path = resource.data_path()
 
-		# # On first startup create pipeline root data
-		# if not os.path.exists(root_dir):
-		# Create pipeline root data
 		json_data = structure.get_type_data('pipeline_root', type_data=structure.DATA)
 
 		self.logger.debug('Data structure: {}'.format(structure.get_id()))
@@ -162,6 +163,33 @@ class StartupMainWindow(QtWidgets.QDialog):
 		path_maker.make_dirs(data_root_path, 'Projects')
 		path_maker.make_data_file(data_root_path, 'Projects', json_data=json_data)
 		path_maker.make_uuid_file(data_root_path, 'Projects', uuid='000')
+
+		# Project creation
+		user_path = os.path.join(workspace_mount, 'Projects', project_name)
+		data_path = os.path.join(data_root_path, 'Projects', project_name)
+		project_uuid = str(uuid.uuid4())
+
+		json_data = structure.get_type_data('project', type_data=structure.DATA)
+		json_data['meta_data']['item_name'] = project_name
+		json_data['meta_data']['item_type'] = 'project'
+		json_data['meta_data']['uuid'] = project_uuid
+		json_data['meta_data']['hidden'] = 'False'
+		json_data['meta_data']['locked'] = 'True'
+		json_data['meta_data']['template_id'] = 'project'
+
+		# Make project user path
+		user_path_abs = user_path
+		path_maker.make_dirs(user_path_abs)
+
+		# Make project data path
+		data_path_abs = data_path
+		path_maker.make_dirs(data_path_abs)
+
+		# Make data file (data path much exist first)
+		path_maker.make_data_file(data_path_abs, json_data=json_data)
+		# Make uuid file
+		path_maker.make_uuid_file(data_path_abs, uuid=project_uuid)
+
 
 		self.close()
 
