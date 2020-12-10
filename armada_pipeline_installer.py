@@ -15,6 +15,7 @@ from Qt import QtGui
 from core import definitions
 from core import resource
 from core import path_maker
+from core.model import item_role
 
 import utilsa
 
@@ -119,14 +120,15 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.lbl_armada_ver.setStyleSheet(resource.style_sheet('setup'))
 
 		releases_url = 'https://api.github.com/repos/Armada-Pipeline/armada-pipeline/releases'
+		# header = {'Authorization': 'token ' + cred.token}
 		response = requests.get(releases_url)
+
 		json_data = json.loads(response.content)
-		# json_data = {'fake':''}
 
 		self.armada_versions = []
 		for release in json_data:
 			if isinstance(release, str):
-				self.armada_versions.append('v2020.09.20-beta')
+				# self.armada_versions.append('v2020.09.02-beta')
 				self.armada_versions.append('v2020.09.15-beta')
 				break
 			elif release['target_commitish'] == 'master' and release['prerelease'] is False:
@@ -226,7 +228,6 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			color: #FFFFFF;
 			font: 14px "Roboto-thin";
 			border: 0px;
-			
 		}""")
 
 		# State machine ------------------

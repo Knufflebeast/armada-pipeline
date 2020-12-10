@@ -1,6 +1,6 @@
 
 QWidget{
-    background: #262626;
+    background: #202020;
     color:rgb(232,232,232) ;
     font-size: 12px ;
     font-weight:bold;
@@ -22,9 +22,6 @@ QLineEdit{
     border: none;
     height: 30px;
     border-radius: 15px;
-	margin-left: 100px;
-	padding-left: 100px;
-
 }
 
 QSplitter::handle:horizontal {

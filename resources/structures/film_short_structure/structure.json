@@ -2,11 +2,11 @@
 	"$id": "film_short_structure",
 	"icon": "folder_film",
 	"hierarchy": {
-		"pipeline_root": {
-			"template_id": "pipeline_root",
+		"workspace": {
+			"template_id": "workspace",
 			"category": "folder",
 			"template": "root",
-			"icon": "folder_pipeline_root",
+			"icon": "folder_workspace",
 			"data": {
 				"meta_data": {"$ref": ["definitions", "meta_data"]},
 				"ext_data": {"$ref": ["definitions", "ext_data"]

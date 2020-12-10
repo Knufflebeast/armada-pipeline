@@ -7,14 +7,12 @@ def register():
 	templates = [
 
 		# User paths
-		Template('pipeline_root', '{pipeline_root}'),
-		Template('client', '{@pipeline_root}/{client}'),
-		Template('project', '{@client}/{project}'),
+		Template('workspace', '{workspace}'),
+		Template('project', '{@workspace}/{project}'),
 
 		# Data paths
-		Template('pipeline_root_data', '{pipeline_root}'),
-		Template('client_data', '{@pipeline_root_data}/{client}'),
-		Template('project_data', '{@client_data}/{project}'),
+		Template('workspace_data', '{workspace}'),
+		Template('project_data', '{@workspace_data}/{project}'),
 		]
 
 	return templates
