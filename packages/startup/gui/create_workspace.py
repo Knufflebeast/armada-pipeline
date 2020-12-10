@@ -9,6 +9,7 @@ from Qt import QtCore, QtWidgets, QtGui
 
 from core import definitions
 from core import resource
+from core import renaming_convention
 
 import utilsa
 
@@ -231,8 +232,15 @@ class CreateWorkspace(QtWidgets.QWidget):
 		validator_mount = self.le_mount_point.validator()
 		state_mount = validator_mount.validate(self.le_mount_point.text(), 0)[0]
 
+		typed_name = self.le_workspace.text()
+		conventions = renaming_convention.Convention(typed_name)
+		formatted_text = conventions.set_convention(case=conventions.CAPITAL_SNAKE)
+		print(typed_name)
+		print(formatted_text)
+		# self.le_workspace.setText(formatted_text)
 		validator_workspace = self.le_workspace.validator()
 		state_workspace = validator_workspace.validate(self.le_workspace.text(), 0)[0]
+
 
 		# Check validator
 		if state_workspace == QtGui.QValidator.Acceptable and state_mount == QtGui.QValidator.Acceptable and os.path.exists(self.le_mount_point.text()):

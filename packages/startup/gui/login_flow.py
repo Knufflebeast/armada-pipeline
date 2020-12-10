@@ -116,8 +116,7 @@ class LoginFlow(QtWidgets.QDialog):
 			}'''
 		)
 		self.btn_log_in.setFixedHeight(30)
-		# self.btn_log_in.setEnabled(False)
-
+		self.btn_log_in.setEnabled(False)
 
 		# self.lbl_disclaimer = QtWidgets.QTextBrowser()
 		# self.lbl_disclaimer.setReadOnly(True)
@@ -220,7 +219,7 @@ class LoginFlow(QtWidgets.QDialog):
 		# Connections -----------------------------------
 		self.btn_log_in_google.clicked.connect(self._on_google_log_in)
 		self.btn_log_in.clicked.connect(self._on_log_in)
-		# self.le_email.textChanged.connect(self.check_le_state)
+		self.le_email.textChanged.connect(self.check_le_state)
 
 	def check_le_state(self, *args, **kwargs):
 		"""
@@ -244,11 +243,14 @@ class LoginFlow(QtWidgets.QDialog):
 			['openid'])
 
 		cred = flow.run_local_server()
+		account_uuid = str(uuid.uuid4())
+		# data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
+		# data['CURRENT_ACCOUNT'] = cred.token
+		# print(cred.token)
+		# resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
 
-		data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		data['CURRENT_ACCOUNT'] = cred.token
-		print(cred.token)
-		resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
+		os.environ['ARMADA_CURRENT_ACCOUNT'] = cred.token
+		os.environ['ARMADA_SETUP_ACCOUNT_UUID'] = account_uuid
 
 		self.parent.sw_main.setCurrentIndex(1)
 
