@@ -149,7 +149,6 @@ class CreateUsername(QtWidgets.QWidget):
 		self.setLayout(self.main_layout)
 
 		# Connections -----------------------------------
-		# self.btn_next.clicked.connect(self._on_next)
 		self.le_username.textChanged.connect(self.check_le_state)
 
 	def check_le_state(self, *args, **kwargs):
@@ -170,3 +169,15 @@ class CreateUsername(QtWidgets.QWidget):
 		self.tb_description.setText("""
 					<p style="font: 12px;font-weight: normal; color: #CFCFCF;">You're signed in as {0}.</p>""".format(
 			account_name))
+
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_next.isEnabled():
+				self.btn_next.clicked.emit()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(CreateUsername, self).keyPressEvent(event)

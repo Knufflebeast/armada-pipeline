@@ -9,6 +9,7 @@ from Qt import QtCore, QtWidgets, QtGui
 
 from core import definitions
 from core import resource
+from core import renaming_convention
 
 import utilsa
 
@@ -67,7 +68,7 @@ class CreateProject(QtWidgets.QWidget):
 		self.le_project = QtWidgets.QLineEdit()
 		self.le_project.setPlaceholderText('e.g. Short Film, Platformer Game, Run Cycle Project, etc.')
 		self.le_project.setMinimumHeight(40)
-		regexp = QtCore.QRegExp("^[a-zA-Z0-9- ]+$", QtCore.Qt.CaseInsensitive)
+		regexp = QtCore.QRegExp("^[a-zA-Z0-9-_ ]+$", QtCore.Qt.CaseInsensitive)
 		validator = QtGui.QRegExpValidator(regexp)
 		self.le_project.setValidator(validator)
 
@@ -167,6 +168,13 @@ class CreateProject(QtWidgets.QWidget):
 		Makes sure line edit input is an email address
 		"""
 		sender = self.sender()
+
+		# Workspace conventions
+		typed_name = self.le_project.text()
+		conventions = renaming_convention.Convention(typed_name)
+		formatted_text = conventions.set_convention(case=conventions.CAPITAL_CAMEL)
+		self.le_project.setText(formatted_text)
+
 		validator = sender.validator()
 		state = validator.validate(sender.text(), 0)[0]
 		if state == QtGui.QValidator.Acceptable:
@@ -176,11 +184,14 @@ class CreateProject(QtWidgets.QWidget):
 		else:
 			self.btn_next.setEnabled(False)
 
-	# def _on_next(self):
-		# project = self.le_project.text()
-		# data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-		# data['CURRENT_PROJECT'] = project
-		# print(project)
-		# resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
-		#
-		# self.complete.emit()
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_next.isEnabled():
+				self.btn_next.clicked.emit()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(CreateProject, self).keyPressEvent(event)

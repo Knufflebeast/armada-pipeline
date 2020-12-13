@@ -215,11 +215,14 @@ class CreateStructureWorkflow(QtWidgets.QWidget):
 
 
 
-	# def _on_next(self):
-	# 	username = self.le_username.text()
-	# 	data = resource.json_read(definitions.USER_PATH, filename='armada_settings')
-	# 	data['CURRENT_USERNAME'] = username
-	# 	print(username)
-	# 	resource.json_save(definitions.USER_PATH, filename='armada_settings', data=data)
-	#
-	# 	self.nextPressed.emit()
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_next.isEnabled():
+				self.btn_next.clicked.emit()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(CreateStructureWorkflow, self).keyPressEvent(event)

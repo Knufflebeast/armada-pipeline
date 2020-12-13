@@ -162,6 +162,18 @@ class CreateSoftware(QtWidgets.QWidget):
 		# Connections -----------------------------------
 		# self.le_houdini_path.textChanged.connect(self.check_le_state)
 
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_next.isEnabled():
+				self.btn_next.clicked.emit()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(CreateSoftware, self).keyPressEvent(event)
+
 
 class SoftwareCard(QtWidgets.QWidget):
 	def __init__(self, parent=None, software=None):
@@ -365,3 +377,4 @@ class SoftwareCard(QtWidgets.QWidget):
 	# 		self.btn_next.setEnabled(False)
 	# 	else:
 	# 		self.btn_next.setEnabled(False)
+

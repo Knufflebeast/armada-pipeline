@@ -217,4 +217,14 @@ class CreateStructureSelection(QtWidgets.QWidget):
 			# self.lbl_helper_image.setPixmap(image)
 			# self.lbl_helper_image.show()
 
-
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_next.isEnabled():
+				self.btn_next.clicked.emit()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(CreateStructureSelection, self).keyPressEvent(event)

@@ -86,6 +86,7 @@ class LoginFlow(QtWidgets.QDialog):
 		self.lbl_email = QtWidgets.QLabel('Email address')
 
 		self.le_email = QtWidgets.QLineEdit()
+		self.le_email.setFocus()
 		regexp = QtCore.QRegExp("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", QtCore.Qt.CaseInsensitive)
 		validator = QtGui.QRegExpValidator(regexp)
 		self.le_email.setValidator(validator)
@@ -261,3 +262,15 @@ class LoginFlow(QtWidgets.QDialog):
 		os.environ['ARMADA_SETUP_ACCOUNT_UUID'] = account_uuid
 
 		self.loginPressed.emit()
+
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Return:
+			if self.btn_log_in.isEnabled():
+				self._on_log_in()
+				return True
+			else:
+				return False
+		if event.key() == QtCore.Qt.Key_Escape:
+			return False
+		else:
+			super(LoginFlow, self).keyPressEvent(event)

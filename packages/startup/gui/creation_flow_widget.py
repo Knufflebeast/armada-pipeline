@@ -152,18 +152,6 @@ class CreationFlowWidget(QtWidgets.QWidget):
 
 		self.state_machine.start()
 
-		# Properties
-		# self.s0_welcome.assignProperty(self.btn_left, "text", "Cancel")
-		# self.s0_welcome.assignProperty(self.btn_right, "text", "Begin Setup!")
-		# self.s1_mount_setup.assignProperty(self.btn_left, "text", "Back")
-		# self.s1_mount_setup.assignProperty(self.btn_right, "text", "Next")
-		# self.s2_structure_workflow.assignProperty(self.btn_left, "text", "Back")
-		# self.s2_structure_workflow.assignProperty(self.btn_right, "text", "Next")
-		# self.s3_structure_sel.assignProperty(self.btn_left, "text", "Back")
-		# self.s3_structure_sel.assignProperty(self.btn_right, "text", "Next")
-		# self.s4_software.assignProperty(self.btn_right, "text", "Back")
-		# self.s4_software.assignProperty(self.btn_right, "text", "Finish!")
-
 		# Layout --------------------------------------------
 		frame_layout = QtWidgets.QHBoxLayout()
 		frame_layout.addWidget(self.frame_left)
@@ -220,30 +208,39 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		print('entered user')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.ABOUT_YOU)
 		self.sw_creation_flows.setCurrentIndex(0)
+		self.username_widget.le_username.setFocus()
 
 	def on_s1_workspace_entered(self):
 		print('entered workspace')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
 		self.sw_creation_flows.setCurrentIndex(1)
+		# Show the username in message
 		self.workspace_widget.update_gui(self.username_widget.le_username.text())
+		self.workspace_widget.le_mount_point.setFocus()
 
 	def on_s2_project_entered(self):
 		print('entered project')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
 		self.sw_creation_flows.setCurrentIndex(2)
+		self.project_widget.le_project.setFocus()
 
 	def on_s3_structure_workflow_entered(self):
 		print('entered structure workflow')
 		self.sw_creation_flows.setCurrentIndex(3)
+		# self.structure_workflow_widget.lw_items.setFocus()
 
 	def on_s4_structure_sel_entered(self):
 		print('entered structure selection')
 		self.sw_creation_flows.setCurrentIndex(4)
+		# self.structure_selection_widget.lw_items.setFocus()
 
 	def on_s5_software_entered(self):
 		print('entered software')
 		self.sw_creation_flows.setCurrentIndex(5)
+		self.software_widget.setFocus()
 
 	def on_s6_complete(self):
 		print('write data signal on completion')
 		self.setup_completed.emit()
+
+
