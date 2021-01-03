@@ -1,0 +1,150 @@
+{
+	"$id": "root_structure",
+	"icon": "folder_game",
+	"hierarchy": {
+		"workspace": {
+			"template_id": "workspace",
+			"category": "folder",
+			"template": "root",
+			"icon": "folder_workspace",
+			"data": {
+				"meta_data": {"$ref": ["definitions", "meta_data"]},
+				"ext_data": {"$ref": ["definitions", "ext_data"]
+				}
+			},
+			"children": {
+				"project": {
+					"template_id": "project",
+					"category": "folder",
+					"template": "root",
+					"icon": "folder_project",
+					"structure_id": "None",
+					"data": {
+						"meta_data": {"$ref": ["definitions", "meta_data"]},
+						"ext_data": {"$ref": ["definitions","ext_data"]}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"description": "Data definitions",
+		"meta_data": {
+			"type": "data",
+			"description": "Data that describes the object's context and properties",
+			"required": [
+				"item_name",
+				"item_type",
+				"uuid",
+				"locked",
+				"hidden"
+			],
+			"properties": {
+				"item_name": {
+					"type": "string",
+					"description": "Item's name",
+					"examples": [
+						"File_Name"
+					]
+				},
+				"item_type": {
+					"type": "string",
+					"description": "Item's type",
+					"examples": [
+						"client",
+						"project",
+						"folder",
+						"asset"
+					]
+				},
+				"uuid": {
+					"type": "string",
+					"description": "Item's unique id",
+					"examples": [
+						"00f24c82-841b-4728-3h6s-4b198cf24ee0"
+					]
+				},
+				"locked": {
+					"type": "string",
+					"description": "Item's lock state"
+				},
+				"hidden": {
+					"type": "string",
+					"description": "Item's visibility state"
+				},
+				"structure_id": {
+					"type": "string",
+					"description": "id of the template"
+				}
+			}
+		},
+		"ext_data": {
+			"type": "data",
+			"description": "Data from project management software",
+			"properties": {
+				"assignee": {
+					"type": "string",
+					"description": "User assigned to item"
+				},
+				"due_date": {
+					"type": "string",
+					"description": "When is the item due?"
+				},
+				"priority": {
+					"type": "string",
+					"description": "Item priority"
+				},
+				"tags": {
+					"type": "array",
+					"description": "Descriptive tags"
+				},
+				"progress": {
+					"type": "string",
+					"description": "Progress state"
+				}
+			}
+		},
+		"type_data_major": {
+			"type": "data",
+			"description": "Type data for a major component",
+			"required": ["software"],
+			"properties": {
+				"software": {
+					"type": "string",
+					"description": "Software this item is related to"
+				},
+				"major_ver": {
+					"type": "string",
+					"description": "Minor version for item"
+				}
+			}
+		},
+		"type_data_minor": {
+			"type": "data",
+			"description": "Type data for a minor component",
+			"required": ["software"],
+			"properties": {
+				"software": {
+					"type": "string",
+					"description": "Software this item is related to"
+				},
+				"minor_ver": {
+					"type": "string",
+					"description": "Minor version for item"
+				},
+				"comment": {
+					"type": "string",
+					"description": "User comments for item"
+				},
+				"user": {
+					"type": "string",
+					"description": "User who created item"
+				},
+				"time": {
+					"type": "string",
+					"description": "Date and time of item creation"
+				}
+			}
+		}
+	}
+}

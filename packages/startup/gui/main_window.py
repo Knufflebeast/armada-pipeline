@@ -109,7 +109,8 @@ class StartupMainWindow(QtWidgets.QDialog):
 				'ARMADA_CURRENT_PROJECT': project_name,
 				'ARMADA_MAYA_LOCATION': maya_location,
 				'ARMADA_BLENDER_LOCATION': blender_location,
-				'ARMADA_HOUDINI_LOCATION': houdini_location
+				'ARMADA_HOUDINI_LOCATION': houdini_location,
+				'ARMADA_DEBUG': '1'
 			},
 			'workspaces': {
 				workspace_name: {

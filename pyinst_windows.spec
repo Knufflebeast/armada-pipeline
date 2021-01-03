@@ -7,6 +7,7 @@ added_files = [
     ('./resources', 'resources'),
 #    ('./config_user/config.json', 'config_user'),
     ('./packages/marina', 'packages/marina'),
+    ('./packages/marina', 'packages/startup'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),
 #    ('./packages/mb_tools', 'packages/mb_tools'),
@@ -17,7 +18,7 @@ added_files = [
 	('./venv/Lib/site-packages/PySide2', 'PySide2'),
 	('./venv/Lib/site-packages/shiboken2', 'shiboken2'),
 ]
-a = Analysis(['./packages/launcher/main.py'],
+a = Analysis(['./packages/startup/main.py'],
     pathex=[
     './',
     './core',
