@@ -134,7 +134,14 @@ class StartupMainWindow(QtWidgets.QDialog):
 		except AttributeError:
 			raise AttributeError('No type selected, please select one')
 
-		structure_settings_data = {"structure_name": structure_sel_data}
+		structure_settings_data = {
+			"structures": {
+				'root_structure': 'root_structure',
+				'gaming_short_structure': 'gaming_short_structure',
+				'film_short_structure': 'film_short_structure'
+
+			}
+		}
 		shared_settings_path = resource.data_path(data_type='shared')
 		resource.json_save(shared_settings_path, filename='shared_settings', data=structure_settings_data)
 
@@ -144,16 +151,18 @@ class StartupMainWindow(QtWidgets.QDialog):
 
 		# Copy default structures to shared location
 		shared_settings_data = resource.json_read(resource.data_path(data_type='shared'), filename='shared_settings')
-		default_structure_path = resource.get('resources', 'structures', shared_settings_data['structure_name'])
-		pipeline_structures_data_path = resource.data_path('structures', shared_settings_data['structure_name'], data_type='shared')
+		# default_structure_path = resource.get('resources', 'structures', shared_settings_data['structure_name']) # This only moved a single structure, should move all defaults
+		# pipeline_structures_data_path = resource.data_path('structures', shared_settings_data['structure_name'], data_type='shared')
+		default_structure_path = resource.get('resources', 'structures')
+		pipeline_structures_data_path = resource.data_path('structures', data_type='shared')
 		copy_tree(default_structure_path, pipeline_structures_data_path)
 
 		# File data creation
 		data_root_path = resource.data_path()
 
-		json_data = structure.get_type_data('workspace', type_data=structure.DATA)
+		json_data = structure.get_type_data('workspace', type_data=structure.DATA, structure_id=structure_sel_data)
 
-		self.logger.debug('Data structure: {}'.format(structure.get_id()))
+		self.logger.debug('Data structure: {}'.format(structure_sel_data))
 
 		json_data['meta_data']['item_name'] = workspace_name
 		json_data['meta_data']['item_type'] = 'workspace'
@@ -161,6 +170,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 		json_data['meta_data']['hidden'] = 'False'
 		json_data['meta_data']['locked'] = 'True'
 		json_data['meta_data']['template_id'] = 'workspace'
+		json_data['meta_data']['structure_id'] = 'root_structure'
 
 		path_maker.make_dirs(data_root_path, workspace_name)
 		path_maker.make_data_file(data_root_path, workspace_name, json_data=json_data)
@@ -171,13 +181,14 @@ class StartupMainWindow(QtWidgets.QDialog):
 		data_path = os.path.join(data_root_path, workspace_name, project_name)
 		project_uuid = str(uuid.uuid4())
 
-		json_data = structure.get_type_data('project', type_data=structure.DATA)
+		json_data = structure.get_type_data('project', type_data=structure.DATA, structure_id=structure_sel_data)
 		json_data['meta_data']['item_name'] = project_name
 		json_data['meta_data']['item_type'] = 'project'
 		json_data['meta_data']['uuid'] = project_uuid
 		json_data['meta_data']['hidden'] = 'False'
 		json_data['meta_data']['locked'] = 'True'
 		json_data['meta_data']['template_id'] = 'project'
+		json_data['meta_data']['structure_id'] = structure_sel_data
 
 		# Make project user path
 		user_path_abs = user_path
@@ -194,4 +205,4 @@ class StartupMainWindow(QtWidgets.QDialog):
 
 		self.close()
 
-		print('hey we done')
+		print('setup complete')

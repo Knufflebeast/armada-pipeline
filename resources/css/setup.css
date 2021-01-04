@@ -118,7 +118,7 @@ QPushButton:disabled{
 
 QComboBox {
     background: #262626;
-    font: 12px "Roboto Thin";
+    font: 12px "Roboto Thin" white;
     padding: 1px 18px 1px 20px;
     border: none;
 }
@@ -134,9 +134,10 @@ QComboBox::drop-down{
 }
 QComboBox::down-arrow
 {
-    image: url(resources/icon/arrow_down_white.svg);
+    image: url(../../resources/icon/arrow_down_white.svg);
     width: 14px;
     height: 14px;
+	margin-right: 20px;
 }
 QAbstractItemView
 {

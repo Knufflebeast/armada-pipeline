@@ -231,7 +231,11 @@
 				},
 				"structure_id": {
 					"type": "string",
-					"description": "id of the template"
+					"description": "Item's assigned structure"
+				},
+				"template_id": {
+					"type": "string",
+					"description": "Item's template ID"
 				}
 			}
 		},
