@@ -139,7 +139,6 @@ class StartupMainWindow(QtWidgets.QDialog):
 				'root_structure': 'root_structure',
 				'gaming_short_structure': 'gaming_short_structure',
 				'film_short_structure': 'film_short_structure'
-
 			}
 		}
 		shared_settings_path = resource.data_path(data_type='shared')
@@ -150,7 +149,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 		path_maker.make_dirs(structures_data_root_path)
 
 		# Copy default structures to shared location
-		shared_settings_data = resource.json_read(resource.data_path(data_type='shared'), filename='shared_settings')
+		# shared_settings_data = resource.json_read(resource.data_path(data_type='shared'), filename='shared_settings')
 		# default_structure_path = resource.get('resources', 'structures', shared_settings_data['structure_name']) # This only moved a single structure, should move all defaults
 		# pipeline_structures_data_path = resource.data_path('structures', shared_settings_data['structure_name'], data_type='shared')
 		default_structure_path = resource.get('resources', 'structures')
