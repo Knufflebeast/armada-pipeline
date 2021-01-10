@@ -1,5 +1,5 @@
 {
-	"$id": "gaming_short_structure",
+	"$id": "game_short_structure",
 	"icon": "folder_game",
 	"hierarchy": {
 		"workspace": {

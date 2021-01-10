@@ -137,7 +137,7 @@ class StartupMainWindow(QtWidgets.QDialog):
 		structure_settings_data = {
 			"structures": {
 				'root_structure': 'root_structure',
-				'gaming_short_structure': 'gaming_short_structure',
+				'game_short_structure': 'game_short_structure',
 				'film_short_structure': 'film_short_structure'
 			}
 		}

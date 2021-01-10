@@ -691,6 +691,11 @@ class ComboItem(QtGui.QStandardItem):
 			return self.item_icon
 
 if __name__ == "__main__":
+	# Qt env vars
+	os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
+	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3"
+	os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # High dpi setting
+
 	# Run Armada launcher
 	app = QtWidgets.QApplication(sys.argv)
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
