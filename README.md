@@ -10,7 +10,7 @@ Download the beta now! https://gum.co/YwBqX
 
 Future website: https://www.armadapipeline.com
 
-Discord for questions, featurs, and discussions: https://discord.gg/5jXdtau
+Discord for questions, feature requests, and discussions: https://discord.gg/5jXdtau
 
 
 Artists

@@ -6,6 +6,7 @@ added_files = [
     ('./core', 'core'),
     ('./resources', 'resources'),
 #    ('./config_user/config.json', 'config_user'),
+    ('./packages/startup', 'packages/startup'),
     ('./packages/marina', 'packages/marina'),
     ('./packages/launcher', 'packages/launcher'),
     ('./packages/atlantis', 'packages/atlantis'),
@@ -17,7 +18,7 @@ added_files = [
 	('./venv/Lib/site-packages/PySide2', 'PySide2'),
 	('./venv/Lib/site-packages/shiboken2', 'shiboken2'),
 ]
-a = Analysis(['./packages/launcher/main.py'],
+a = Analysis(['./packages/startup/main.py'],
     pathex=[
     './',
     './core',
@@ -74,7 +75,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='armada_pipeline',
+          name='Armada Pipeline',
           debug=True,
           bootloader_ignore_signals=False,
           strip=False,
@@ -107,4 +108,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='armada_pipeline')
+               name='armada_pipeline_win10')

@@ -1,6 +1,6 @@
 {
-	"$id": "film_short_structure",
-	"icon": "folder_film",
+	"$id": "game_short_structure",
+	"icon": "folder_game",
 	"hierarchy": {
 		"workspace": {
 			"template_id": "workspace",
@@ -94,8 +94,8 @@
 								}
 							}
 						},
-						"sequences": {
-							"template_id": "sequences",
+						"levels": {
+							"template_id": "levels",
 							"category": "sub_folder",
 							"template" : "shot",
 							"icon": "folder_folder",
@@ -104,57 +104,45 @@
 								"ext_data": {"$ref": ["definitions","ext_data"]}
 							},
 							"children": {
-								"sequence": {
-									"template_id": "sequence",
+								"level": {
+									"template_id": "level",
 									"category": "folder",
-									"template" : "shot",
-									"icon": "folder_sequence",
+									"template" : "level",
+									"icon": "folder_level",
 									"data": {
 										"meta_data": {"$ref": ["definitions", "meta_data"]},
 										"ext_data": {"$ref": ["definitions","ext_data"]}
 									},
 									"children": {
-										"shot": {
-											"template_id": "shot",
+										"level_task": {
+											"template_id": "task",
 											"category": "folder",
-											"template" : "shot",
-											"icon": "folder_shot",
+											"template" : "level",
+											"icon": "folder_task",
 											"data": {
 												"meta_data": {"$ref": ["definitions","meta_data"]},
 												"ext_data": {"$ref": ["definitions","ext_data"]}
 											},
 											"children": {
-												"shot_task": {
-													"template_id": "task",
-													"category": "folder",
-													"template" : "shot",
-													"icon": "folder_task",
+												"level_major_component": {
+													"template_id": "major_component",
+													"category": "file",
+													"template" : "level",
+													"icon": "folder_major_component",
 													"data": {
 														"meta_data": {"$ref": ["definitions","meta_data"]},
-														"ext_data": {"$ref": ["definitions","ext_data"]}
+														"ext_data": {"$ref": ["definitions","ext_data"]},
+														"type_data": {"$ref": ["definitions","type_data_major"]}
 													},
 													"children": {
-														"shot_major_component": {
-															"template_id": "major_component",
-															"category": "file",
-															"template" : "shot",
-															"icon": "folder_major_component",
+														"level_minor_component": {
+															"template_id": "minor_component",
+															"category": "version",
+															"template" : "level",
+															"icon": "software",
 															"data": {
 																"meta_data": {"$ref": ["definitions","meta_data"]},
-																"ext_data": {"$ref": ["definitions","ext_data"]},
-																"type_data": {"$ref": ["definitions","type_data_major"]}
-															},
-															"children": {
-																"shot_minor_component": {
-																	"template_id": "minor_component",
-																	"category": "version",
-																	"template" : "shot",
-																	"icon": "software",
-																	"data": {
-																		"meta_data": {"$ref": ["definitions","meta_data"]},
-																		"type_data": {"$ref": ["definitions","type_data_minor"]}
-																	}
-																}
+																"type_data": {"$ref": ["definitions","type_data_minor"]}
 															}
 														}
 													}
@@ -216,9 +204,9 @@
 						"File_Name"
 					]
 				},
-				"structure_id": {
+				"item_type": {
 					"type": "string",
-					"description": "Item's assigned structure",
+					"description": "Item's type",
 					"examples": [
 						"client",
 						"project",
@@ -241,9 +229,13 @@
 					"type": "string",
 					"description": "Item's visibility state"
 				},
+				"structure_id": {
+					"type": "string",
+					"description": "Item's assigned structure"
+				},
 				"template_id": {
 					"type": "string",
-					"description": "id of the template"
+					"description": "Item's template ID"
 				}
 			}
 		},

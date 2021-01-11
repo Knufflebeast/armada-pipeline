@@ -15,6 +15,7 @@ from Qt import QtGui
 from core import definitions
 from core import resource
 from core import path_maker
+from core.model import item_role
 
 import utilsa
 
@@ -118,39 +119,31 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		self.lbl_armada_ver.setText("Armada Pipeline version:")
 		self.lbl_armada_ver.setStyleSheet(resource.style_sheet('setup'))
 
-		# from html2json import collect
-		#
-		# headers = {'Content-type': 'application/json'}
-		# releases_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases'
-		# response = requests.get(releases_url)
-		# template = {
-		# 	"details": {
-		# 		"div": {
-		# 			"div": {
-		# 				"div": {
-		# 					"a href": []
-		# 				}
-		# 			}
-		# 		}
-		# 	}
-		# }
-		# asdf = collect(response.text, template=template)
-		#
-		# ContentUrl = json.dumps({
-		# 	'url': str(releases_url),
-		# 	'page_content': response.text,
-		# })
-		#
-		# json_data = json.loads(response.content)
-		# # response = urllib.request.urlopen(releases_url)
-		# things1 = response.read()
-		# info = json.loads(str(js))
-		# things = json.loads(response.content.decode("utf-8"))
-		# print(response.json()["name"])
+		releases_url = 'https://api.github.com/repos/Armada-Pipeline/armada-pipeline/releases'
+		# header = {'Authorization': 'token ' + cred.token}
+		response = requests.get(releases_url)
 
-		self.armada_versions = ['2020.09.02-beta']
-		self.cb_version_numbers = QtWidgets.QComboBox()
+		json_data = json.loads(response.content)
+
+		self.armada_versions = []
+		for release in json_data:
+			if isinstance(release, str):
+				# self.armada_versions.append('v2020.09.02-beta')
+				self.armada_versions.append('v2020.09.15-beta')
+				break
+			elif release['target_commitish'] == 'master' and release['prerelease'] is False:
+				release_name = release['tag_name']
+				if release_name.startswith("v"):
+					self.armada_versions.append(release_name[1:])
+				else:
+					self.armada_versions.append(release_name)
+
+		self.cb_version_numbers = VersionsComboBox(self)
 		self.cb_version_numbers.addItems(self.armada_versions)
+		self.cb_version_numbers.setMinimumHeight(30)
+		self.cb_version_numbers.setStyleSheet(resource.style_sheet('setup'))
+		self.cb_version_numbers.setView(QtWidgets.QListView())
+		self.cb_version_numbers.view().window().setWindowFlags(QtCore.Qt.Popup | QtCore.Qt.FramelessWindowHint | QtCore.Qt.NoDropShadowWindowHint );
 
 		self.lbl_full_path = QtWidgets.QLabel()
 		self.lbl_full_path.setText("Full path:")
@@ -235,7 +228,6 @@ class ArmadaInstaller(QtWidgets.QDialog):
 			color: #FFFFFF;
 			font: 14px "Roboto-thin";
 			border: 0px;
-			
 		}""")
 
 		# State machine ------------------
@@ -503,12 +495,14 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		# Path defaults
 		if platform.system().lower() in ['windows']:
 			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_win10.zip'.format(self.cb_version_numbers.currentText())
+			os_type = 'win10'
 		elif platform.system().lower() in ['darwin']:
 			release_url = 'https://github.com/Armada-Pipeline/armada-pipeline/releases/download/v{0}/armada_pipeline_{0}_macos.zip'.format(self.cb_version_numbers.currentText())
+			os_type = 'macos'
 		else:
 			raise
 
-		save_path = '{0}/armada_pipeline.zip'.format(self.le_full_path.text())
+		save_path = '{0}/armada_pipeline_{1}.zip'.format(self.le_full_path.text(), os_type)
 
 		self.btn_left.setDisabled(True)
 		self.btn_right.setDisabled(True)
@@ -540,12 +534,11 @@ class ArmadaInstaller(QtWidgets.QDialog):
 
 		# Path defaults
 		if platform.system().lower() in ['windows']:
-			armada_exe = 'armada_pipeline.exe'
+			armada_exe = 'Armada Pipeline.exe'
 		elif platform.system().lower() in ['darwin']:
-			armada_exe = 'armada_pipeline'
+			armada_exe = 'Armada Pipeline'
 		subprocess.Popen(os.path.join(self.extracted_directory, armada_exe))
-		import time
-		time.sleep(5)
+
 		self.close()
 
 	def keyPressEvent(self, event):
@@ -558,8 +551,10 @@ class ArmadaInstaller(QtWidgets.QDialog):
 		else:
 			super(ArmadaInstaller, self).keyPressEvent(event)
 
+	def closeEvent(self, event):
+		self.deleteLater()
 
-import threading
+
 import urllib
 import urllib.request
 
@@ -579,7 +574,7 @@ class DownloadThread(QtCore.QThread):
 	def run(self):
 
 		# Set the text to the current task
-		self.update_gui.emit("Gatherin' booty...")
+		self.update_gui.emit("Gatherin' booty... (Downloading)")
 
 		# Download data
 		u = urllib.request.urlopen(self.url)
@@ -603,7 +598,7 @@ class DownloadThread(QtCore.QThread):
 		f.close()
 
 		# unzip
-		self.update_gui.emit("Swabbin' the decks...")
+		self.update_gui.emit("Swabbin' the decks... (Finishing up)")
 
 		import zipfile
 
@@ -644,12 +639,67 @@ class DownloadThread(QtCore.QThread):
 
 		return
 
+
+class VersionsComboBox(QtWidgets.QComboBox):
+	def __init__(self, parent=None):
+		super(VersionsComboBox, self).__init__(parent)
+
+	def paintEvent(self, e: QtGui.QPaintEvent) -> None:
+		try:
+			rect_image = QtCore.Qt.QRect(
+				self.rect().left() + 6,
+				self.rect().top(),
+				self.rect().width() + 6,
+				self.rect().height()
+			)
+			painter = QtGui.QPainter()
+			painter.begin(self)
+			index_icon = self.currentData(item_role.ICON)
+			pixmap_icon = index_icon.pixmap(128, 128)
+			pixmap_icon_scaled = pixmap_icon.scaled(
+				rect_image.width(),
+				rect_image.height(),
+				QtCore.Qt.KeepAspectRatio,
+				QtCore.Qt.SmoothTransformation
+			)
+			QtWidgets.QApplication.style().drawItemPixmap(
+				painter,
+				rect_image,
+				QtCore.Qt.AlignLeft,
+				pixmap_icon_scaled
+			)
+			painter.end()
+
+		except AttributeError:
+			super(VersionsComboBox, self).paintEvent(e)
+
+
+class ComboItem(QtGui.QStandardItem):
+	def __init__(self, data=None):
+		""":param item: str - Dir_Name.dirType
+		"""
+		super(ComboItem, self).__init__()
+
+		# Item meta data
+		self.item_name = data
+		self.item_icon = resource.icon(self.item_name, 'png')
+
+	def data(self, role):
+		if role == item_role.NAME:
+			return self.item_name
+		if role == item_role.ICON:
+			return self.item_icon
+
 if __name__ == "__main__":
+	# Qt env vars
+	os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
+	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3"
+	os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # High dpi setting
+
 	# Run Armada launcher
 	app = QtWidgets.QApplication(sys.argv)
 	# QtGui.QFontDatabase.addApplicationFont('resources/fonts/Roboto/Roboto-Thin.ttf')
 
 	window = ArmadaInstaller()
-	window.show()
 
 	sys.exit(app.exec_())
