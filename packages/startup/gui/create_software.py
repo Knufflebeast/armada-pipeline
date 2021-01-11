@@ -186,17 +186,19 @@ class SoftwareCard(QtWidgets.QWidget):
 		self.frame_bg = QtWidgets.QFrame()
 		self.frame_bg.setStyleSheet('background-color: #303030;')
 
+		self.software = software
+
 		# Path defaults
 		if platform.system().lower() in ['windows']:
-			if software == 'maya':
+			if self.software == 'maya':
 				self.env_var = 'ARMADA_MAYA_LOCATION'
 				self.software_dir = 'Autodesk'
 				software_path = 'C:/Program Files/Autodesk'
-			elif software == 'blender':
+			elif self.software == 'blender':
 				self.env_var = 'ARMADA_BLENDER_LOCATION'
 				self.software_dir = 'Blender Foundation'
 				software_path = 'C:/Program Files/Blender Foundation'
-			elif software == 'houdini':
+			elif self.software == 'houdini':
 				self.env_var = 'ARMADA_HOUDINI_LOCATION'
 				self.software_dir = 'Side Effects Software'
 				software_path = 'C:/Program Files/Side Effects Software'
@@ -211,11 +213,11 @@ class SoftwareCard(QtWidgets.QWidget):
 			raise
 
 		# Blender
-		self.icon_software = QtWidgets.QPushButton(resource.icon(software, 'png'), '')
+		self.icon_software = QtWidgets.QPushButton(resource.icon(self.software, 'png'), '')
 		self.icon_software.setStyleSheet(resource.style_sheet('icon_label'))
 		self.icon_software.setIconSize(QtCore.QSize(30, 30))
 
-		self.lbl_software_install = QtWidgets.QLabel('{0} install location'.format(software.capitalize()))
+		self.lbl_software_install = QtWidgets.QLabel('{0} install location'.format(self.software.capitalize()))
 
 		self.le_software_path = QtWidgets.QLineEdit()
 		self.le_software_path.setMinimumHeight(40)
@@ -278,16 +280,7 @@ class SoftwareCard(QtWidgets.QWidget):
 											   )
 
 		# Add versions
-		for item in os.listdir(self.le_software_path.text()):
-			if software == 'maya':
-				if item in ['Maya2020', 'Maya2019']:
-					lw_item = QtWidgets.QListWidgetItem(item)
-					# lw_item.setSizeHint(self.lw_houdini_verisons.sizeHint())
-					self.lw_software_verisons.addItem(lw_item)
-			else:
-				lw_item = QtWidgets.QListWidgetItem(item)
-				# lw_item.setSizeHint(self.lw_houdini_verisons.sizeHint())
-				self.lw_software_verisons.addItem(lw_item)
+		self._on_update_versions()
 
 		# Layout --------------------------------------------
 		frame_layout = QtWidgets.QHBoxLayout()
@@ -334,6 +327,22 @@ class SoftwareCard(QtWidgets.QWidget):
 		self.le_software_path.textChanged.connect(self.check_le_state)
 		self.btn_software_browse.clicked.connect(self.on_software_browse_pressed)
 
+	def _on_update_versions(self):
+		# Add versions
+		try:
+			for item in os.listdir(self.le_software_path.text()):
+				if self.software == 'maya':
+					if item in ['Maya2020', 'Maya2019']:
+						lw_item = QtWidgets.QListWidgetItem(item)
+						# lw_item.setSizeHint(self.lw_houdini_verisons.sizeHint())
+						self.lw_software_verisons.addItem(lw_item)
+				else:
+					lw_item = QtWidgets.QListWidgetItem(item)
+					# lw_item.setSizeHint(self.lw_houdini_verisons.sizeHint())
+					self.lw_software_verisons.addItem(lw_item)
+		except FileNotFoundError:
+			print("Paths aren't correct yet")
+
 	def set_env_vars(self):
 		os.environ[self.env_var] = self.le_software_path.text()
 
@@ -344,6 +353,7 @@ class SoftwareCard(QtWidgets.QWidget):
 		path = self.file_dialog.getExistingDirectory(self, "Find and select the folder named: {0}".format(self.software_dir))
 		if path:
 			self.le_software_path.setText(path)
+			self._on_update_versions()
 
 	def maya_version_resolver(self, folder_name):
 		# import re

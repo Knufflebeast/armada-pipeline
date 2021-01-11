@@ -28,8 +28,6 @@ def _parse_settings():
 		ARMADA_SITE: str, Where are you located? | "NYC-work" | "home-harlem"
 	"""
 
-
-
 	# Check if config exists
 	if os.path.exists(definitions.GLOBAL_LOCAL_SETTINGS_FILE):
 		logger.info('Default config detected...')

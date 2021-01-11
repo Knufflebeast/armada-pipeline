@@ -22,9 +22,6 @@ QLineEdit{
     border: none;
     height: 30px;
     border-radius: 15px;
-	margin-left: 100px;
-	padding-left: 100px;
-
 }
 
 QSplitter::handle:horizontal {

@@ -1,5 +1,5 @@
 {
-	"$id": "gaming_short_structure",
+	"$id": "game_short_structure",
 	"icon": "folder_game",
 	"hierarchy": {
 		"workspace": {
@@ -231,7 +231,11 @@
 				},
 				"structure_id": {
 					"type": "string",
-					"description": "id of the template"
+					"description": "Item's assigned structure"
+				},
+				"template_id": {
+					"type": "string",
+					"description": "Item's template ID"
 				}
 			}
 		},

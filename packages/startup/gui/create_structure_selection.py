@@ -102,7 +102,7 @@ class CreateStructureSelection(QtWidgets.QWidget):
 		builtin_icon = resource.color_svg('folder_game', 1024, '#F9D085')
 		lw_item = QtWidgets.QListWidgetItem(builtin_icon, 'Game Dev Structure')
 		lw_item.setSizeHint(self.lw_items.sizeHint())
-		lw_item.setData(QtCore.Qt.UserRole, 'gaming_short_structure')
+		lw_item.setData(QtCore.Qt.UserRole, 'game_short_structure')
 		self.lw_items.addItem(lw_item)
 
 		custom_icon = resource.color_svg('folder_film', 1024, '#F9D085')
