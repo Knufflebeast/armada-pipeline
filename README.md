@@ -6,7 +6,7 @@ An art asset pipeline for artists.
 
 Documentation is in the works.
 
-Download the beta now! https://gum.co/YwBqX
+Download the beta now! https://gum.co/armada-pipeline-beta
 
 Future website: https://www.armadapipeline.com
 
