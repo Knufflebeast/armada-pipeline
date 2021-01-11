@@ -574,7 +574,7 @@ class DownloadThread(QtCore.QThread):
 	def run(self):
 
 		# Set the text to the current task
-		self.update_gui.emit("Gatherin' booty...")
+		self.update_gui.emit("Gatherin' booty... (Downloading)")
 
 		# Download data
 		u = urllib.request.urlopen(self.url)
@@ -598,7 +598,7 @@ class DownloadThread(QtCore.QThread):
 		f.close()
 
 		# unzip
-		self.update_gui.emit("Swabbin' the decks...")
+		self.update_gui.emit("Swabbin' the decks... (Finishing up)")
 
 		import zipfile
 

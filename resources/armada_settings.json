@@ -3,5 +3,5 @@
 		"data" : "data_schema_v01",
 		"user_config" : "user_config_schema_v01"
 	},
-	"armada_version": "2020.01.09-beta"
+	"armada_version": "2021.01.10-beta"
 }

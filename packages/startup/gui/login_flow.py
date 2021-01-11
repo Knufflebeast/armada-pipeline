@@ -65,9 +65,13 @@ class LoginFlow(QtWidgets.QDialog):
 		self.logo_image.setPixmap(self.logo_image_pixmap)
 		self.logo_image.setAlignment(QtCore.Qt.AlignCenter)
 
-		self.btn_log_in_google = QtWidgets.QPushButton("Log in with Google")
+		self.by_knufflebeast = QtWidgets.QLabel(self)
+		self.by_knufflebeast.setText("""<p style="font: 12px;font-weight: normal;">by Knufflebeast</p>""")
+
+		self.btn_log_in_google = QtWidgets.QPushButton("Log in with Google (coming soon)")
 		self.btn_log_in_google.setIcon(resource.icon('google', 'png'))
 		self.btn_log_in_google.setFixedHeight(40)
+		self.btn_log_in_google.setDisabled(True)
 
 		self.hline_or1 = QtWidgets.QFrame()
 		self.hline_or1.setFixedHeight(1)
@@ -147,8 +151,9 @@ class LoginFlow(QtWidgets.QDialog):
 		frame_layout.setContentsMargins(0, 0, 0, 0)
 		frame_layout.setSpacing(0)
 
-		logo_layout = QtWidgets.QHBoxLayout()
+		logo_layout = QtWidgets.QVBoxLayout()
 		logo_layout.addWidget(self.logo_image)
+		logo_layout.addWidget(self.by_knufflebeast, 0, QtCore.Qt.AlignRight)
 		logo_layout.setAlignment(QtCore.Qt.AlignTop)
 		logo_layout.setContentsMargins(0, 40, 0, 40)
 		logo_layout.setSpacing(0)

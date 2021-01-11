@@ -11,6 +11,7 @@ from core import definitions
 from core import resource
 from core import path_maker
 from startup.gui import breadcrumb_startup_steps
+from startup.gui import disclaimer
 from startup.gui import create_workspace
 from startup.gui import create_username
 from startup.gui import create_project
@@ -76,6 +77,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# self.breadcrumb_steps.setTabEnabled(breadcrumb_startup_steps.WORKSPACE, False)
 		# self.breadcrumb_steps.setTabEnabled(breadcrumb_startup_steps.PROJECT, False)
 
+		self.disclaimer_widget = disclaimer.Disclaimer(self)
 		self.username_widget = create_username.CreateUsername(self)
 		self.workspace_widget = create_workspace.CreateWorkspace(self)
 		self.project_widget = create_project.CreateProject(self)
@@ -86,6 +88,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		# Creation stacked widget. Guides first setup flow
 		self.sw_creation_flows = QtWidgets.QStackedWidget(self)
 
+		self.sw_creation_flows.addWidget(self.disclaimer_widget)
 		self.sw_creation_flows.addWidget(self.username_widget)
 		self.sw_creation_flows.addWidget(self.workspace_widget)
 		self.sw_creation_flows.addWidget(self.project_widget)
@@ -99,6 +102,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 
 		# State machine ------------------
 		self.state_machine = QtCore.QStateMachine()
+		self.s00_disclaimer = QtCore.QState()
 		self.s0_username = QtCore.QState()
 		self.s1_workspace = QtCore.QState()
 		self.s2_project = QtCore.QState()
@@ -108,6 +112,8 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.s6_complete = QtCore.QState()
 
 		# Transitions
+		# Disclaimer next
+		self.trans_s00_s0 = self.s00_disclaimer.addTransition(self.disclaimer_widget.btn_next.clicked, self.s0_username)
 		# User next
 		self.trans_s0_s1 = self.s0_username.addTransition(self.username_widget.btn_next.clicked, self.s1_workspace)
 		# Workspace next
@@ -132,6 +138,7 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.trans_s2_s1 = self.s1_workspace.addTransition(self.workspace_widget.btn_back.clicked, self.s0_username)
 
 		# Add states
+		self.state_machine.addState(self.s00_disclaimer)
 		self.state_machine.addState(self.s0_username)
 		self.state_machine.addState(self.s1_workspace)
 		self.state_machine.addState(self.s2_project)
@@ -139,9 +146,10 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		self.state_machine.addState(self.s4_structure_sel)
 		self.state_machine.addState(self.s5_software)
 		self.state_machine.addState(self.s6_complete)
-		self.state_machine.setInitialState(self.s0_username)
+		self.state_machine.setInitialState(self.s00_disclaimer)
 
 		# Connections
+		self.s00_disclaimer.entered.connect(self.on_s00_disclaimer_entered)
 		self.s0_username.entered.connect(self.on_s0_username_entered)
 		self.s1_workspace.entered.connect(self.on_s1_workspace_entered)
 		self.s2_project.entered.connect(self.on_s2_project_entered)
@@ -173,9 +181,14 @@ class CreationFlowWidget(QtWidgets.QWidget):
 		input_layout.setContentsMargins(0, 0, 0, 0)
 		input_layout.setSpacing(0)
 
+		example_layout = QtWidgets.QVBoxLayout(self.example_widget)
+		self.lbl_tbd = QtWidgets.QLabel('Example image TBD')
+		example_layout.addWidget(self.lbl_tbd, 0, QtCore.Qt.AlignCenter)
+
+
 		self.main_layout = QtWidgets.QHBoxLayout()
 		self.main_layout.addLayout(frame_layout)
-		self.main_layout.addWidget(self.example_widget)
+		self.main_layout.addWidget(self.lbl_tbd)
 		self.main_layout.setAlignment(QtCore.Qt.AlignLeft)
 		self.main_layout.setContentsMargins(0, 0, 0, 0)
 		self.main_layout.setSpacing(0)
@@ -204,16 +217,20 @@ class CreationFlowWidget(QtWidgets.QWidget):
 	# 	self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
 	# 	self.project_widget.update()
 
+	def on_s00_disclaimer_entered(self):
+		print('entered user')
+		# self.sw_creation_flows.setCurrentIndex(0)
+
 	def on_s0_username_entered(self):
 		print('entered user')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.ABOUT_YOU)
-		self.sw_creation_flows.setCurrentIndex(0)
+		self.sw_creation_flows.setCurrentIndex(1)
 		self.username_widget.le_username.setFocus()
 
 	def on_s1_workspace_entered(self):
 		print('entered workspace')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.WORKSPACE)
-		self.sw_creation_flows.setCurrentIndex(1)
+		self.sw_creation_flows.setCurrentIndex(2)
 		# Show the username in message
 		self.workspace_widget.update_gui(self.username_widget.le_username.text())
 		self.workspace_widget.le_mount_point.setFocus()
@@ -221,22 +238,22 @@ class CreationFlowWidget(QtWidgets.QWidget):
 	def on_s2_project_entered(self):
 		print('entered project')
 		self.breadcrumb_steps.setCurrentIndex(breadcrumb_startup_steps.PROJECT)
-		self.sw_creation_flows.setCurrentIndex(2)
+		self.sw_creation_flows.setCurrentIndex(3)
 		self.project_widget.le_project.setFocus()
 
 	def on_s3_structure_workflow_entered(self):
 		print('entered structure workflow')
-		self.sw_creation_flows.setCurrentIndex(3)
+		self.sw_creation_flows.setCurrentIndex(4)
 		# self.structure_workflow_widget.lw_items.setFocus()
 
 	def on_s4_structure_sel_entered(self):
 		print('entered structure selection')
-		self.sw_creation_flows.setCurrentIndex(4)
+		self.sw_creation_flows.setCurrentIndex(5)
 		# self.structure_selection_widget.lw_items.setFocus()
 
 	def on_s5_software_entered(self):
 		print('entered software')
-		self.sw_creation_flows.setCurrentIndex(5)
+		self.sw_creation_flows.setCurrentIndex(6)
 		self.software_widget.setFocus()
 
 	def on_s6_complete(self):

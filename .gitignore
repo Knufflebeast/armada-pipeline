@@ -134,3 +134,5 @@ envs/
 venv-maya/
 
 .DS_Store
+
+venv_installer/
