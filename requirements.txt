@@ -19,12 +19,12 @@ pefile==2019.4.18
 Pygments==2.6.1
 PyInstaller==3.6
 pyparsing==2.4.6
-PySide2==5.14.2.2
+PySide2==5.15.2
 pytz==2019.3
 pywin32-ctypes==0.2.0
 Qt.py==1.2.5
 requests==2.23.0
-shiboken2==5.14.2.2
+shiboken2==5.15.2
 six==1.14.0
 snowballstemmer==2.0.0
 Sphinx==2.4.4

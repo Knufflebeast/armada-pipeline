@@ -15,8 +15,8 @@ added_files = [
     ('./vendor', 'vendor'),
 #    ('c:/hostedtoolcache/windows/python/3.7.7/x64/lib/site-packages/PySide2', 'PySide2'),
 #    ('c:/hostedtoolcache/windows/python/3.7.7/x64/lib/site-packages/shiboken2', 'shiboken2')
-	('./venv/Lib/site-packages/PySide2', 'PySide2'),
-	('./venv/Lib/site-packages/shiboken2', 'shiboken2'),
+#	('./venv/Lib/site-packages/PySide2', 'PySide2'),
+#	('./venv/Lib/site-packages/shiboken2', 'shiboken2'),
 ]
 a = Analysis(['./packages/startup/main.py'],
     pathex=[
