@@ -133,7 +133,7 @@ class BreadcrumbStartupSteps(QtWidgets.QTabBar):
 			self.initStyleOption(tab, idx)
 
 			# Draw arrow
-			if tab.text is '':
+			if tab.text == '':
 				painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
 				# Icon

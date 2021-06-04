@@ -202,6 +202,10 @@ class SoftwareCard(QtWidgets.QWidget):
 				self.env_var = 'ARMADA_HOUDINI_LOCATION'
 				self.software_dir = 'Side Effects Software'
 				software_path = 'C:/Program Files/Side Effects Software'
+			elif self.software == 'mari':
+				self.env_var = 'ARMADA_MARI_LOCATION'
+				self.software_dir = 'Mari{version}'
+				software_path = 'C:/Program Files'
 
 		elif platform.system().lower() in ['darwin']:
 			self.maya_ver = 'maya2020'
