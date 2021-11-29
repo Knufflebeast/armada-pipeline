@@ -50,8 +50,8 @@ class StartupMainWindow(QtWidgets.QDialog):
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 		self.installEventFilter(self)
 		self.setStyleSheet(resource.style_sheet('setup'))
-		self.resize(1300, 750)
-		self.sizeHint()
+		# self.resize(500, 750)
+		# self.sizeHint()
 		self.setWindowTitle('Armada Startup')
 
 		# GUI -----------------------------------------------

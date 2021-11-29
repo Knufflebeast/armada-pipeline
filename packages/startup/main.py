@@ -3,7 +3,7 @@ import sys
 import json
 import jsonschema
 
-from Qt import QtWidgets, QtGui
+from Qt import QtWidgets, QtGui, QtCore
 
 from core import definitions
 from core import resource
@@ -30,7 +30,7 @@ def _parse_settings():
 
 	# Check if config exists
 	if os.path.exists(definitions.GLOBAL_LOCAL_SETTINGS_FILE):
-		logger.info('Default config detected...')
+		logger.info('Default config detected... = {0}'.format(definitions.GLOBAL_LOCAL_SETTINGS_FILE))
 		pass
 	#
 	else:
@@ -81,7 +81,9 @@ def launch_armada():
 	# Qt env vars
 	os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3"
-	os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # High dpi setting
+	os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"  # High dpi setting
+	# QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)  # enable highdpi scaling
+	# QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)  # use highdpi icons
 
 	# Run Armada launcher
 	app = QtWidgets.QApplication(sys.argv)

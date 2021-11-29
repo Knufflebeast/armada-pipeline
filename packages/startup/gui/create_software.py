@@ -336,7 +336,7 @@ class SoftwareCard(QtWidgets.QWidget):
 		try:
 			for item in os.listdir(self.le_software_path.text()):
 				if self.software == 'maya':
-					if item in ['Maya2020', 'Maya2019']:
+					if item in ['Maya2020', 'Maya2019', 'Maya2022']:
 						lw_item = QtWidgets.QListWidgetItem(item)
 						# lw_item.setSizeHint(self.lw_houdini_verisons.sizeHint())
 						self.lw_software_verisons.addItem(lw_item)

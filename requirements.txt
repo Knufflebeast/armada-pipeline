@@ -10,7 +10,7 @@ idna==2.9
 imagesize==1.2.0
 jsonschema==3.2.0
 Jinja2==2.11.3
-Lucidity==1.5.1
+Lucidity==1.6.0
 MarkupSafe==1.1.1
 mock==4.0.2
 packaging==20.3
@@ -22,7 +22,7 @@ pyparsing==2.4.6
 PySide2==5.15.2
 pytz==2019.3
 pywin32-ctypes==0.2.0
-Qt.py==1.2.5
+Qt.py==1.3.6
 requests==2.23.0
 shiboken2==5.15.2
 six==1.14.0
@@ -36,4 +36,4 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.4
 urllib3==1.26.5
-watchdog==0.10.2
+watchdog==2.1.6
